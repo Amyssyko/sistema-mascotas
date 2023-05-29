@@ -11,12 +11,15 @@ Instale Node JS
 Instale VS CODE
 Instale PostgreSQL
 ejecute los siguientes comandos para instalar las dependencias 
+
+Hay varios manejadores de paquetes como npm, yard y pnpm, estos dos ultimos se tiene que activar o instalar segun la documentacion
+
 ```bash
 npm i
 # o
-yarn i
+yarn i (recomendado, pero debe activar/instalar)
 # o
-pnpm i
+pnpm i (recomendado, pero debe activar/instalar)
 ```
 
 Para cambiar la config de url de la conexion con prisma y postgresql
