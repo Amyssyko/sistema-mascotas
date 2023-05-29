@@ -1,11 +1,21 @@
 "use client"
-import React from "react"
-import { AppBar, Toolbar, CssBaseline, Typography, makeStyles } from "@material-ui/core"
-import Link from "next/link"
 
-const useStyles = makeStyles((theme: any) => ({
+import React from "react"
+import {
+	AppBar,
+	Toolbar,
+	CssBaseline,
+	Typography,
+	makeStyles,
+	useTheme,
+	useMediaQuery,
+} from "@material-ui/core"
+import Link from "next/link"
+import DrawerComponent from "./Drawer"
+
+const useStyles = makeStyles((theme) => ({
 	navlinks: {
-		marginLeft: theme.spacing(10),
+		marginLeft: theme.spacing(5),
 		display: "flex",
 	},
 	logo: {
@@ -26,28 +36,37 @@ const useStyles = makeStyles((theme: any) => ({
 
 function Navbar() {
 	const classes = useStyles()
+	const theme = useTheme()
+	const isMobile = useMediaQuery(theme.breakpoints.down("md"))
 
 	return (
 		<AppBar position="static">
 			<CssBaseline />
 			<Toolbar>
 				<Typography variant="h4" className={classes.logo}>
-					Navbar
+					🐶🐱 Mascota Feliz
 				</Typography>
-				<div className={classes.navlinks}>
-					<Link href="/" className={classes.link}>
-						Inicio
-					</Link>
-					<Link href="/mascotas" className={classes.link}>
-						Mascotas
-					</Link>
-					<Link href="/peticion" className={classes.link}>
-						Peticion
-					</Link>
-					<Link href="/contacto" className={classes.link}>
-						Contacto
-					</Link>
-				</div>
+				{isMobile ? (
+					<DrawerComponent />
+				) : (
+					<div className={classes.navlinks}>
+						<Link href="/" className={classes.link}>
+							Inicio
+						</Link>
+						<Link href="/mascotas" className={classes.link}>
+							Mascotas
+						</Link>
+						<Link href="/peticion" className={classes.link}>
+							Peticion
+						</Link>
+						<Link href="/contacto" className={classes.link}>
+							Contacto
+						</Link>
+						<Link href="/auth/login" className={classes.link}>
+							Login
+						</Link>
+					</div>
+				)}
 			</Toolbar>
 		</AppBar>
 	)
