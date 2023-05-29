@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 			include: {
 				person: true,
 			},
-			rejectOnNotFound: false,
+			//rejectOnNotFound: false,
 		})
 
 		//console.log(data)

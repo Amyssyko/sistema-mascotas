@@ -1,5 +1,5 @@
 "use client"
-import "./globals.css"
+//import "./globals.css"
 import { Montserrat } from "next/font/google"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"

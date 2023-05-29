@@ -7,7 +7,7 @@ describe("Pagina Inicial", () => {
 	it("Deberia renderizar propiedades", () => {
 		render(<Home />)
 		const header = screen.getByRole("heading")
-		const headerText = "Ini"
+		const headerText = "Inicio"
 		expect(header).toHaveTextContent(headerText)
 	})
 })
