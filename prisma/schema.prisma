@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  SUPERADMIN
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  person    Person?
+  blog      Post[]
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  description String?
+  postDate    DateTime?
+  isActived   Boolean
+  User        User?     @relation(fields: [userId], references: [id])
+  userId      Int?
+  Pet         Pet?      @relation(fields: [petId], references: [id])
+  petId       Int?
+}
+
+model Person {
+  dni       String     @id @db.VarChar(10)
+  firstName String
+  lastName  String
+  birthDate DateTime
+  phone     Int
+  address   String
+  photo     String?
+  userId    Int        @unique
+  user      User       @relation(fields: [userId], references: [id])
+  adoption  Adoption[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Pet {
+  id          Int        @id @default(autoincrement())
+  name        String
+  age         Int?
+  breed       String?
+  photo       String?
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  adoption    Adoption[]
+  lostpet     LostPet[]
+  post        Post[]
+}
+
+enum AdoptionStatus {
+  recibida
+  pendiente
+  revisada
+  completada
+  rechazada
+  aprovada
+}
+
+model StatusAdoptionPet {
+  id          Int            @id @default(autoincrement())
+  status      AdoptionStatus @default(recibida)
+  description String?
+  adoption    Adoption[]
+}
+
+//Solicitud
+model Adoption {
+  id                  Int                @id @default(autoincrement())
+  pet                 Pet?               @relation(fields: [petId], references: [id])
+  petId               Int?
+  status              String
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  StatusAdoptionPet   StatusAdoptionPet? @relation(fields: [statusAdoptionPetId], references: [id])
+  statusAdoptionPetId Int?
+  Person              Person?            @relation(fields: [personDni], references: [dni])
+  personDni           String?            @db.VarChar(10)
+}
+
+enum PetStatus {
+  perdida
+  encontrada
+}
+
+model LostPet {
+  id          Int       @id @default(autoincrement())
+  pet         Pet?      @relation(fields: [petId], references: [id])
+  petId       Int
+  location    String?
+  description String?
+  status      PetStatus @default(perdida)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
