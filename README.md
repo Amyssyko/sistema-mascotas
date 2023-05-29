@@ -4,12 +4,54 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 First, run the development server:
 
+
+
+
+Instale Node JS
+
+Instale VS CODE
+
+Instale PostgreSQL
+
+ejecute los siguientes comandos para instalar las dependencias 
+
+Hay varios manejadores de paquetes como npm, yard y pnpm, estos dos ultimos se tiene que activar o instalar segun la documentacion
+
+```bash
+npm i
+# o
+yarn i (recomendado, pero debe activar/instalar)
+# o
+pnpm i (recomendado, pero debe activar/instalar)
+```
+
+Para cambiar la config de url de la conexion con prisma y postgresql
+
+verifique el archivo .env 
+https://www.prisma.io/docs/concepts/database-connectors/postgresql
+
+ejecute los sguientes comandos para instalar las dependencias 
+```bash
+npx prisma
+npx prisma generate
+npx prisma migrate dev
+# o
+yarx prisma
+yarx prisma generate
+yarx prisma migrate dev
+# o
+pnpx prisma
+pnpx prisma generate
+pnpx prisma migrate dev
+```
+
+Para modo desarrollo ejecute
 ```bash
 npm run dev
-# or
+# o
 yarn dev
-# or
-pnpm dev
+# o
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
