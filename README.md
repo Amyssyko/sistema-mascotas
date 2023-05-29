@@ -10,7 +10,7 @@ First, run the development server:
 Instale Node JS
 Instale VS CODE
 Instale PostgreSQL
-ejecute los sguientes comandos para instalar las dependencias 
+ejecute los siguientes comandos para instalar las dependencias 
 ```bash
 npm i
 # o
