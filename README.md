@@ -8,8 +8,11 @@ First, run the development server:
 
 
 Instale Node JS
+
 Instale VS CODE
+
 Instale PostgreSQL
+
 ejecute los siguientes comandos para instalar las dependencias 
 
 Hay varios manejadores de paquetes como npm, yard y pnpm, estos dos ultimos se tiene que activar o instalar segun la documentacion
@@ -48,7 +51,7 @@ npm run dev
 # o
 yarn dev
 # o
-pnpm dev
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
