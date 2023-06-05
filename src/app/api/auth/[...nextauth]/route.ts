@@ -1,7 +1,5 @@
 import NextAuth from "next-auth/next"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { NextAuthOptions } from "next-auth"
-import { NextRequest } from "next/server"
 
 interface DataForm {
 	email?: string
@@ -19,7 +17,6 @@ interface User {
 	phone?: string
 	address?: string
 	photo?: string
-	randomKey?: string
 }
 const handler = NextAuth({
 	pages: {
@@ -43,6 +40,7 @@ const handler = NextAuth({
 			},
 			async authorize(credentials, req) {
 				// Add logic here to look up the user from the credentials supplied
+
 				const res = await fetch("http://localhost:3000/api/auth/login", {
 					method: "POST",
 					body: JSON.stringify({
@@ -53,28 +51,19 @@ const handler = NextAuth({
 						"Content-Type": "application/json",
 					},
 				})
-
-				console.log(res)
+				if (!res.ok) {
+					console.log("error")
+					return null
+				}
+				console.log("error")
 				const user = await res.json()
 				console.log(user)
-				const { id, email, rol, dni, firstName, lastName, birthDate, phone, address, photo } = user
+				const { id, email, role, dni, firstName, lastName, birthDate, phone, address, photo } = user
 				if (res.ok && user) {
-					console.log({
-						id,
-						email,
-						rol,
-						dni,
-						firstName,
-						lastName,
-						birthDate,
-						phone,
-						address,
-						photo,
-					})
 					return {
 						id,
 						email,
-						rol,
+						role,
 						dni,
 						firstName,
 						lastName,
@@ -82,36 +71,27 @@ const handler = NextAuth({
 						phone,
 						address,
 						photo,
-						randomKey: "Hey cool",
 					} as User
-					// Any object returned will be saved in `user` property of the JWT
 				}
-
-				return null
 			},
 		}),
 	],
-	secret: process.env.SECRET_KEY,
+
 	callbacks: {
-		session: ({ session, token }: any) => {
-			return {
-				...session,
-				user: {
-					...session.user,
-					id: token.id,
-					randomKey: token.randomKey,
-				},
-			}
-		},
 		jwt: async ({ token, user }: any) => {
+			//console.log(user)
 			if (user) {
 				return {
 					...token,
-					id: user.id,
-					randomKey: token.randomKey,
+					...user,
 				}
 			}
 			return token
+		},
+		session: ({ session, token }: any) => {
+			session.user = token as any
+			console.log(session)
+			return session
 		},
 	},
 })

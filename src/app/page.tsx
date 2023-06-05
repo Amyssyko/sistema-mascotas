@@ -1,14 +1,21 @@
-import Navbar from "@/components/Navbar"
+import CustomNavbar from "@/components/CustomNavbar"
+import Footer from "@/components/Footer"
+import SigninButton from "@/components/SigninButton"
+
+export const metadata = {
+	title: "Mi Mascota Feliz",
+	description: "Pagina para adoptar a tu mascota",
+}
 
 export default function Home() {
 	return (
-		<>
-			<Navbar />
-			<main className="flex min-h-screen flex-col items-center justify-between p-24">
-				<div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-					<h1>Inicio</h1>
-				</div>
-			</main>
-		</>
+		<div className="flex flex-col min-h-screen">
+			<CustomNavbar />
+			<div className="flex flex-grow items-center justify-between font-mono text-sm bg-gray-800">
+				<h1>Inicio</h1>
+				<SigninButton />
+			</div>
+			<Footer />
+		</div>
 	)
 }

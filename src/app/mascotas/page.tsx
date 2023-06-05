@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar"
+import Navbar from "@/components/CustomNavbar"
 import React from "react"
 
 function Page() {

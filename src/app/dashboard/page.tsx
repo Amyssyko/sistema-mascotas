@@ -1,11 +1,43 @@
-import Layout from "@/layout/layout"
+"use client"
 
-import React from "react"
+import { UsuarioCardData } from "@/components/Cards/UsuarioCardData"
+import Admin from "@/components/Navbar/Admin"
+import { useSession } from "next-auth/react"
+import Link from "next/link"
+import * as React from "react"
+import Loading from "@/components/Loading"
+import SidebarAdmin from "@/components/SidebarAdmin"
+import LayoutDashboard from "@/components/Layout/LayoutDashboard"
 
 function Page() {
+	const { data: session } = useSession()
+	const [isClicked, setisClicked] = React.useState(false)
+
+	console.log(session)
+	if (session === undefined) {
+		return (
+			<>
+				<Loading />
+			</>
+		)
+	}
+	if (!session?.user.role || session.user.role !== "superadmin") {
+		return (
+			<>
+				<h1>No es admin</h1>
+				<Link
+					href="/"
+					className="bg-blue-500 border rounded-lg mx-auto
+				"
+				>
+					Inicio
+				</Link>
+			</>
+		)
+	}
 	return (
-		<Layout>
-			<div>
+		<div>
+			<LayoutDashboard>
 				<h1>hola</h1>
 				<section>
 					<p>
@@ -14,8 +46,11 @@ function Page() {
 						atque accusantium voluptas sunt veniam!
 					</p>
 				</section>
-			</div>
-		</Layout>
+				<div>
+					<UsuarioCardData bool={isClicked} />
+				</div>
+			</LayoutDashboard>
+		</div>
 	)
 }
 

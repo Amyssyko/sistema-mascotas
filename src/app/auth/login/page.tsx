@@ -1,23 +1,16 @@
 "use client"
 import { signIn } from "next-auth/react"
 import * as React from "react"
-import Avatar from "@mui/material/Avatar"
 import Button from "@mui/material/Button"
 import CssBaseline from "@mui/material/CssBaseline"
-import TextField from "@mui/material/TextField"
-import FormControlLabel from "@mui/material/FormControlLabel"
-import Checkbox from "@mui/material/Checkbox"
-import Link from "@mui/material/Link"
 import Paper from "@mui/material/Paper"
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
-import Typography from "@mui/material/Typography"
-import { Alert } from "@mui/material"
 import { useError } from "@hooks/useError"
 import axios, { AxiosResponse } from "axios"
 import { toast } from "react-hot-toast"
 import { useRouter } from "next/navigation"
+import { Alert, Card, Input, Typography } from "@material-tailwind/react"
 
 export default function SignInSide() {
 	const router = useRouter()
@@ -30,30 +23,38 @@ export default function SignInSide() {
 		const formData = new FormData(event.currentTarget)
 		const email = formData.get("email")
 		const password = formData.get("password")
-
+		//console.log(email + " " + password)
 		// Validación en el frontend
 		const isEmailEmpty = !email
 		const isPasswordEmpty = !password
 
 		const errorMessage =
 			isEmailEmpty || isPasswordEmpty
-				? `${isEmailEmpty ? "Por favor, ingrese un correo." : ""}
-			 ${isPasswordEmpty ? "Por favor, ingrese una contraseña." : ""}`
+				? `${isEmailEmpty ? "Ingrese un correo." : ""}
+			 ${isPasswordEmpty ? "Ingrese una contraseña." : ""}`
 				: ""
 
 		if (errorMessage) {
 			handleError(errorMessage)
 			return
 		}
-		console.log(email + " " + password)
+		//console.log(email + " " + password)
+
 		const result = await signIn("credentials", {
 			email,
 			password,
-			redirect: true,
-			callbackUrl: "/dashboard",
+			redirect: false,
+			callbackUrl: "/",
 		})
 
-		console.log(result)
+		if (result?.error === "CredentialsSignin") {
+			console.error("Credenciales Invalidas (401)")
+			handleError("Credenciales Invalidas")
+		}
+		if (result?.url) {
+			//console.log("usuario ingreso")
+			router.push("/")
+		}
 	}
 
 	return (
@@ -82,56 +83,51 @@ export default function SignInSide() {
 						alignItems: "center",
 					}}
 				>
-					<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-						<LockOutlinedIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5">
-						Sign in
-					</Typography>
-					<Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 1 }}>
-						<TextField
-							margin="normal"
-							required
-							fullWidth
-							id="email"
-							label="Correo"
-							name="email"
-							autoComplete="email"
-							autoFocus
-						/>
-						<TextField
-							margin="normal"
-							required
-							fullWidth
-							name="password"
-							label="Contraseña"
-							type="password"
-							id="password"
-							autoComplete="current-password"
-						/>
-						{isErrored && (
-							<Alert severity="warning" sx={{ mt: 2 }}>
-								{myError?.message}
-							</Alert>
-						)}
-						<FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Recuerdame" />
-
-						<Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-							Sign In
-						</Button>
-						<Grid container>
-							<Grid item xs>
-								<Link href="#" variant="body2">
-									Olvidaste la contraseña?
-								</Link>
-							</Grid>
-							<Grid item xs>
-								<Link href="/auth/register" variant="body2">
-									{"No te haz registrado? Registrate!"}
-								</Link>
-							</Grid>
-						</Grid>
-					</Box>
+					<Card className="mt-48 mx-auto flex justify-center items-center" color="transparent" shadow={true}>
+						<Typography variant="h3" color="blue">
+							Inicio de Sesión
+						</Typography>
+						<Typography color="gray" className="mt-1 font-normal">
+							Ingresa sus credenciales
+						</Typography>
+						<form onSubmit={onSubmit} className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
+							<div className="mb-4 flex flex-col gap-6  ">
+								<Input
+									size="lg"
+									name="email"
+									id="email"
+									label="Email"
+									type="text"
+									placeholder="example@example.com"
+								/>
+								<Input
+									type="password"
+									name="password"
+									id="password"
+									size="lg"
+									label="Password"
+									placeholder="********"
+								/>
+							</div>
+							{isErrored && (
+								<Alert color="orange" variant="ghost">
+									{myError?.message}
+								</Alert>
+							)}
+							<Button type="submit" className="mt-6" fullWidth>
+								Ingresar
+							</Button>
+							<Typography color="gray" className="mt-4 text-center font-normal">
+								Already have an account?{" "}
+								<a
+									href="/auth/register"
+									className="font-medium text-blue-500 transition-colors hover:text-blue-700"
+								>
+									Registrarse
+								</a>
+							</Typography>
+						</form>
+					</Card>
 				</Box>
 			</Grid>
 		</Grid>

@@ -1,19 +1,14 @@
 "use client"
 
 import * as React from "react"
-import Avatar from "@mui/material/Avatar"
-import Button from "@mui/material/Button"
-import CssBaseline from "@mui/material/CssBaseline"
-import TextField from "@mui/material/TextField"
-import FormControlLabel from "@mui/material/FormControlLabel"
-import Checkbox from "@mui/material/Checkbox"
-import Link from "@mui/material/Link"
-import Grid from "@mui/material/Grid"
-import Box from "@mui/material/Box"
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
-import Typography from "@mui/material/Typography"
-import Container from "@mui/material/Container"
-import { Alert } from "@mui/material"
+import {
+	Card,
+	Typography,
+	Input,
+	Button,
+	Alert,
+} from "@material-tailwind/react"
+
 import { useError } from "@hooks/useError"
 import axios, { AxiosResponse } from "axios"
 import { toast } from "react-hot-toast"
@@ -23,7 +18,7 @@ export default function SignUp() {
 	const router = useRouter()
 	const { myError, isErrored, handleError, resetError } = useError()
 
-	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		resetError()
 		const formData = new FormData(event.currentTarget)
@@ -31,6 +26,7 @@ export default function SignUp() {
 		const password = formData.get("password")
 		const confirmPassword = formData.get("confirm_password")
 
+		//console.log(email + " " + password + " " + confirmPassword)
 		// Validación en el frontend
 		const isEmailEmpty = !email
 		const isPasswordEmpty = !password
@@ -38,8 +34,8 @@ export default function SignUp() {
 
 		const errorMessage =
 			isEmailEmpty || isPasswordEmpty || !doPasswordsMatch
-				? `${isEmailEmpty ? "Por favor, ingrese un correo." : ""}
-           ${isPasswordEmpty ? "Por favor, ingrese una contraseña." : ""}
+				? `${isEmailEmpty ? "Ingrese un correo." : ""}
+           ${isPasswordEmpty ? "Ingrese una contraseña." : ""}
            ${!doPasswordsMatch ? "Las contraseñas no coinciden." : ""}`
 				: ""
 
@@ -55,9 +51,9 @@ export default function SignUp() {
 				confirm_password: confirmPassword,
 			})
 
-			console.log(response.status)
+			//console.log(response.status)
 			if (response.status === 201) {
-				console.log("registro creado")
+				//console.log("registro creado")
 				toast.success("Usuario registrado", {
 					duration: 3000,
 					position: "top-left",
@@ -75,8 +71,9 @@ export default function SignUp() {
 			}
 			router.push("./auth/login")
 		} catch (error: any) {
-			console.log(error.response.data)
-			console.log(error.response.status)
+			console.error(`${error.response.data} (${error.response.status})`)
+			//console.log(error.response.data)
+			//console.log(error.response.status)
 
 			if (error.response && error.response.status) {
 				toast.error(error.response.data, {
@@ -100,7 +97,72 @@ export default function SignUp() {
 	}
 
 	return (
-		<Container component="main" maxWidth="xs">
+		<div className="bg-white w-full">
+			<div className="mx-auto h-screen">
+				<Card
+					className="my-auto pt-48 mx-auto flex justify-center items-center"
+					color="transparent"
+					shadow={false}
+				>
+					<Typography variant="h3" color="blue">
+						Registro
+					</Typography>
+					<Typography color="gray" className="mt-1 font-normal">
+						Ingresa sus credenciales
+					</Typography>
+					<form onSubmit={onSubmit} className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
+						<div className="mb-4 flex flex-col gap-6  ">
+							<Input
+								size="lg"
+								name="email"
+								id="email"
+								label="Email"
+								type="text"
+								placeholder="example@example.com"
+							/>
+							<Input
+								type="password"
+								name="password"
+								id="password"
+								size="lg"
+								label="Password"
+								placeholder="********"
+							/>
+							<Input
+								type="password"
+								name="confirm_password"
+								id="confirm_password"
+								size="lg"
+								label="Confirmar Contraseña"
+								placeholder="********"
+							/>
+						</div>
+						{isErrored && (
+							<Alert color="orange" variant="ghost">
+								{myError?.message}
+							</Alert>
+						)}
+						<Button type="submit" className="mt-6" fullWidth>
+							Ingresar
+						</Button>
+						<Typography color="gray" className="mt-4 text-center font-normal">
+							Already have an account?{" "}
+							<a
+								href="/auth/register"
+								className="font-medium text-blue-500 transition-colors hover:text-blue-700"
+							>
+								Registrarse
+							</a>
+						</Typography>
+					</form>
+				</Card>
+			</div>
+		</div>
+	)
+}
+
+{
+	/**<Container component="main" maxWidth="xs">
 			<CssBaseline />
 			<Box
 				sx={{
@@ -163,6 +225,5 @@ export default function SignUp() {
 					</Grid>
 				</Box>
 			</Box>
-		</Container>
-	)
+		</Container> */
 }

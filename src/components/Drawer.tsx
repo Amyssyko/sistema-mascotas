@@ -4,7 +4,7 @@ import { Drawer, IconButton, List, ListItem, ListItemText, makeStyles } from "@m
 import Link from "next/link"
 import MenuIcon from "@mui/icons-material/Menu"
 
-const useStyles = makeStyles(({ href }) => ({
+const useStyles = makeStyles(({}) => ({
 	link: {
 		textDecoration: "none",
 		color: "blue",
