@@ -6,14 +6,14 @@ import { useSession } from "next-auth/react"
 import Link from "next/link"
 import * as React from "react"
 import Loading from "@/components/Loading"
-import SidebarAdmin from "@/components/SidebarAdmin"
 import LayoutDashboard from "@/components/Layout/LayoutDashboard"
+import SigninButton from "@/components/SigninButton"
 
 function Page() {
 	const { data: session } = useSession()
 	const [isClicked, setisClicked] = React.useState(false)
 
-	console.log(session)
+	//console.log(session)
 	if (session === undefined) {
 		return (
 			<>
@@ -21,7 +21,7 @@ function Page() {
 			</>
 		)
 	}
-	if (!session?.user.role || session.user.role !== "superadmin") {
+	if (!session?.user.role || session?.user.role === "user") {
 		return (
 			<>
 				<h1>No es admin</h1>
@@ -38,6 +38,7 @@ function Page() {
 	return (
 		<div>
 			<LayoutDashboard>
+				<SigninButton />
 				<h1>hola</h1>
 				<section>
 					<p>

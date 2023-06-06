@@ -7,7 +7,6 @@ import Paper from "@mui/material/Paper"
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import { useError } from "@hooks/useError"
-import axios, { AxiosResponse } from "axios"
 import { toast } from "react-hot-toast"
 import { useRouter } from "next/navigation"
 import { Alert, Card, Input, Typography } from "@material-tailwind/react"
@@ -47,8 +46,24 @@ export default function SignInSide() {
 			callbackUrl: "/",
 		})
 
+		console.log(result)
+
 		if (result?.error === "CredentialsSignin") {
+			toast.error("Credenciales Invalidas", {
+				duration: 1000,
+				position: "top-right",
+
+				// Custom Icon
+				icon: "❌",
+
+				// Change colors of success/error/loading icon
+				iconTheme: {
+					primary: "#000",
+					secondary: "#fff",
+				},
+			})
 			console.error("Credenciales Invalidas (401)")
+
 			handleError("Credenciales Invalidas")
 		}
 		if (result?.url) {

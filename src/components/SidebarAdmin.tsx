@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react"
 import React from "react"
 import {
 	Card,
@@ -16,13 +17,16 @@ import {
 import {
 	PresentationChartBarIcon,
 	ShoppingBagIcon,
+	ComputerDesktopIcon,
 	UserCircleIcon,
 	Cog6ToothIcon,
 	InboxIcon,
 	PowerIcon,
+	UserGroupIcon,
 } from "@heroicons/react/24/solid"
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
 import { useSession } from "next-auth/react"
+import { LogOut } from "./Bottom/LogOut"
 
 export default function SidebarAdmin() {
 	const { data } = useSession()
@@ -57,10 +61,10 @@ export default function SidebarAdmin() {
 					<ListItem className="p-0" selected={open === 1}>
 						<AccordionHeader onClick={() => handleOpen(1)} className="border-b-0 p-3">
 							<ListItemPrefix>
-								<PresentationChartBarIcon className="h-5 w-5" />
+								<ComputerDesktopIcon className="h-5 w-5" />
 							</ListItemPrefix>
 							<Typography color="blue-gray" className="mr-auto font-normal">
-								Dashboard
+								Mascotas
 							</Typography>
 						</AccordionHeader>
 					</ListItem>
@@ -70,19 +74,19 @@ export default function SidebarAdmin() {
 								<ListItemPrefix>
 									<ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
 								</ListItemPrefix>
-								Analytics
+								Registrar
 							</ListItem>
 							<ListItem>
 								<ListItemPrefix>
 									<ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
 								</ListItemPrefix>
-								Reporting
+								Lista
 							</ListItem>
 							<ListItem>
 								<ListItemPrefix>
 									<ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
 								</ListItemPrefix>
-								Projects
+								Reportes
 							</ListItem>
 						</List>
 					</AccordionBody>
@@ -99,10 +103,10 @@ export default function SidebarAdmin() {
 					<ListItem className="p-0" selected={open === 2}>
 						<AccordionHeader onClick={() => handleOpen(2)} className="border-b-0 p-3">
 							<ListItemPrefix>
-								<ShoppingBagIcon className="h-5 w-5" />
+								<UserGroupIcon className="h-5 w-5" />
 							</ListItemPrefix>
 							<Typography color="blue-gray" className="mr-auto font-normal">
-								E-Commerce
+								Usuarios
 							</Typography>
 						</AccordionHeader>
 					</ListItem>
@@ -112,13 +116,13 @@ export default function SidebarAdmin() {
 								<ListItemPrefix>
 									<ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
 								</ListItemPrefix>
-								Orders
+								Informacion
 							</ListItem>
 							<ListItem>
 								<ListItemPrefix>
 									<ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
 								</ListItemPrefix>
-								Products
+								Roles
 							</ListItem>
 						</List>
 					</AccordionBody>
@@ -145,11 +149,11 @@ export default function SidebarAdmin() {
 					</ListItemPrefix>
 					Settings
 				</ListItem>
-				<ListItem>
+				<ListItem onClick={() => signOut()}>
 					<ListItemPrefix>
 						<PowerIcon className="h-5 w-5" />
 					</ListItemPrefix>
-					Log Out
+					Cerrar Sesion
 				</ListItem>
 			</List>
 			{/* */}

@@ -1,7 +1,6 @@
 "use client"
 
 import React from "react"
-import { useCountries } from "use-react-countries"
 import {
 	Card,
 	CardHeader,

@@ -52,12 +52,12 @@ const handler = NextAuth({
 					},
 				})
 				if (!res.ok) {
-					console.log("error")
+					//console.log("error")
 					return null
 				}
-				console.log("error")
+				//console.log("error")
 				const user = await res.json()
-				console.log(user)
+				//console.log(user)
 				const { id, email, role, dni, firstName, lastName, birthDate, phone, address, photo } = user
 				if (res.ok && user) {
 					return {
@@ -90,7 +90,7 @@ const handler = NextAuth({
 		},
 		session: ({ session, token }: any) => {
 			session.user = token as any
-			console.log(session)
+			//console.log(session)
 			return session
 		},
 	},

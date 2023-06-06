@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import Admin from "../Navbar/Admin"
 import SidebarAdmin from "../SidebarAdmin"
 import Footer from "../Footer"
+import { Button } from "@material-tailwind/react"
 
 function LayoutDashboard({ children }: { children: React.ReactNode }) {
 	const [availableHeight, setAvailableHeight] = useState(0)
@@ -38,16 +39,18 @@ function LayoutDashboard({ children }: { children: React.ReactNode }) {
 	}
 
 	return (
-		<div className="w-full h-screen bg-orange-50 flex flex-col">
+		<div className="w-full h-screen bg-white flex flex-col">
 			{!isMobile && <SidebarAdmin />}
 			<Admin />
 			<div
-				className={`ml-${isMobile ? "0" : "64"} border-red-600 border bg-blue-800 flex-1 overflow-hidden`}
+				className={`ml-${
+					isMobile ? "0" : "64"
+				} border-red-600  sm:ml-0 md:ml-0 lg:ml-64 xl:64 border bg-blue-800 flex-1 overflow-hidden`}
 				style={{ height: `${availableHeight}px` }}
 			>
 				{children}
 			</div>
-			<Footer />
+
 			{isMobile && (
 				<div
 					className={`fixed inset-0 bg-black opacity-50 transition-opacity z-40 ${
@@ -66,15 +69,17 @@ function LayoutDashboard({ children }: { children: React.ReactNode }) {
 				</div>
 			)}
 			{isMobile && (
-				<button
-					className={`fixed top-2 right-2 p-2 bg-blue-500 text-white rounded-md z-50 ${
+				<Button
+					size="sm"
+					className={`fixed top-2 right-2 p-2 bg-blue-500 mx-auto text-white rounded-md z-50 ${
 						sidebarOpen ? "hidden" : "block"
 					}`}
 					onClick={toggleSidebar}
 				>
 					Open Sidebar
-				</button>
+				</Button>
 			)}
+			<Footer />
 		</div>
 	)
 }
