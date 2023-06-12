@@ -8,6 +8,7 @@ import React from "react"
 interface UsuarioProps {
 	id: string | number | undefined
 	correo: string | undefined
+	dni: string | undefined
 }
 
 function Page() {
@@ -15,9 +16,11 @@ function Page() {
 
 	const id = session?.user?.id
 	const correo = session?.user?.email
+	const dni = session?.user?.dni
+
 	return (
 		<LayoutDashboard>
-			<Usuario id={id} correo={correo} />
+			<Usuario id={id} correo={correo} cedula={dni} />
 		</LayoutDashboard>
 	)
 }

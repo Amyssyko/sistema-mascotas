@@ -14,6 +14,7 @@ import {
 	TabPanel,
 	Select,
 	Option,
+	Alert,
 } from "@material-tailwind/react"
 import {
 	EnvelopeIcon,
@@ -23,15 +24,23 @@ import {
 	PhoneIcon,
 	UserCircleIcon,
 } from "@heroicons/react/24/solid"
+import axios from "axios"
+import { useError } from "@/hooks/useError"
+import { toast } from "react-hot-toast"
+import { useRouter } from "next/navigation"
 
 interface UsuarioProps {
 	id: string | number | undefined
 	correo: string | undefined
+	cedula: string | undefined
 }
 
-export default function Usuario({ id, correo }: UsuarioProps) {
+export default function Usuario({ id, correo, cedula }: UsuarioProps) {
+	const router = useRouter()
+	const { myError, isErrored, handleError, resetError } = useError()
+
 	const [formValues, setFormValues] = React.useState({
-		dni: "",
+		dni: cedula,
 		firstName: "",
 		lastName: "",
 		email: correo,
@@ -50,7 +59,8 @@ export default function Usuario({ id, correo }: UsuarioProps) {
 		}))
 	}
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+		console.log("crear")
 		event.preventDefault()
 		/*	const formData = new FormData(event.currentTarget)
 		const dni = formData.get("dni")
@@ -60,8 +70,90 @@ export default function Usuario({ id, correo }: UsuarioProps) {
 		const address = formData.get("address")
 		const photo = formData.get("photo")
 		*/
-
 		console.log(formValues)
+		const { dni, firstName, lastName, email, birthDate, phone, address, photo, userId } = formValues
+
+		try {
+			if (cedula !== undefined || cedula) {
+				console.log("update")
+				const response = await axios.patch("/api/usuarios", {
+					dni,
+					firstName,
+					lastName,
+					birthDate,
+					phone,
+					address,
+					photo,
+					userId,
+				})
+
+				console.log(response)
+				if (response.status === 200) {
+					toast.success("Datos actualizados éxito", {
+						duration: 3000,
+						position: "bottom-center",
+
+						// Custom Icon
+						icon: "🐱",
+
+						// Change colors of success/error/loading icon
+						iconTheme: {
+							primary: "#000",
+							secondary: "#fff",
+						},
+					})
+				}
+				router.refresh()
+			} else {
+				console.log("post")
+				const response = await axios.post("/api/usuarios", {
+					dni,
+					firstName,
+					lastName,
+					email,
+					birthDate,
+					phone,
+					address,
+					photo,
+					userId,
+				})
+
+				console.log(response)
+				if (response.status === 201) {
+					toast.success("Datos actualizados éxito", {
+						duration: 3000,
+						position: "bottom-center",
+
+						// Custom Icon
+						icon: "🐱",
+
+						// Change colors of success/error/loading icon
+						iconTheme: {
+							primary: "#000",
+							secondary: "#fff",
+						},
+					})
+				}
+				router.refresh()
+			}
+		} catch (error: any) {
+			console.log(error)
+			handleError(error.response.data)
+
+			console.error(`${error.response.data} (${error.response.status})`)
+			if (error.response && error.response.status) {
+				toast.error(error.response.data, {
+					duration: 3000,
+					position: "bottom-center",
+					icon: "❌",
+					iconTheme: {
+						primary: "#000",
+						secondary: "#fff",
+					},
+				})
+			}
+		}
+		router.refresh()
 	}
 
 	return (
@@ -82,26 +174,44 @@ export default function Usuario({ id, correo }: UsuarioProps) {
 			<CardBody>
 				<Tabs className="overflow-visible">
 					<TabsBody>
-						<form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-5 text-red-500">
+						<form onSubmit={onSubmit} className="mt-4 flex flex-col gap-5 text-red-500">
 							<div className="my-1">
 								<Typography variant="small" color="blue-gray" className="mb-4 font-medium">
 									Card Details
 								</Typography>
 								<div className="my-4 flex items-center gap-4">
-									<Input
-										type="number"
-										inputMode="numeric"
-										//required
-										id="dni"
-										label="Cedula"
-										//placeholder="1600821401"
-										name="dni"
-										autoComplete="dni"
-										min="0"
-										value={formValues.dni}
-										onChange={handleInputChange}
-										icon={<IdentificationIcon className="h-5 w-5 text-blue-gray-300" />}
-									/>
+									{cedula ? (
+										<Input
+											type="number"
+											inputMode="numeric"
+											//required
+											id="dni"
+											disabled
+											label="Cedula"
+											//placeholder="1600821401"
+											name="dni"
+											autoComplete="dni"
+											min="0"
+											value={formValues.dni}
+											onChange={handleInputChange}
+											icon={<IdentificationIcon className="h-5 w-5 text-blue-gray-300" />}
+										/>
+									) : (
+										<Input
+											type="number"
+											inputMode="numeric"
+											//required
+											id="dni"
+											label="Cedula"
+											//placeholder="1600821401"
+											name="dni"
+											autoComplete="dni"
+											min="0"
+											value={formValues.dni}
+											onChange={handleInputChange}
+											icon={<IdentificationIcon className="h-5 w-5 text-blue-gray-300" />}
+										/>
+									)}
 
 									<Input
 										type="text"
@@ -112,7 +222,7 @@ export default function Usuario({ id, correo }: UsuarioProps) {
 										name="firstName"
 										autoComplete="firstName"
 										icon={<ExclamationCircleIcon className="h-5 w-5 text-blue-gray-300" />}
-										value={formValues.lastName}
+										value={formValues.firstName}
 										onChange={handleInputChange}
 										//value={formatCardNumber(cardNumber)}
 										//onChange={(event) => setCardNumber(event.target.value)}
@@ -123,6 +233,7 @@ export default function Usuario({ id, correo }: UsuarioProps) {
 								<div className="my-2">
 									<div className="my-4 flex items-center gap-4">
 										<Input
+											disabled
 											name="email"
 											label="Email"
 											//placeholder="example@email.com"
@@ -179,7 +290,14 @@ export default function Usuario({ id, correo }: UsuarioProps) {
 
 								<div className="my-2">
 									<div className="my-4 flex items-center gap-4">
-										<Input name="photo" label="Subir foto" type="file" id="photo" />
+										<Input
+											name="photo"
+											label="Subir foto"
+											type="file"
+											id="photo"
+											value={formValues.photo}
+											onChange={handleInputChange}
+										/>
 										<Input
 											name="address"
 											//placeholder="Av. Los Recuerdos"
@@ -188,12 +306,20 @@ export default function Usuario({ id, correo }: UsuarioProps) {
 											id="address"
 											autoComplete="address"
 											icon={<ExclamationCircleIcon className="h-5 w-5 text-blue-gray-300" />}
-											value={formValues.photo}
+											value={formValues.address}
 											onChange={handleInputChange}
 										/>
 									</div>
 								</div>
 							</div>
+							<div>
+								{isErrored && (
+									<Alert color="orange" variant="ghost" className=" text-sm">
+										{myError?.message}
+									</Alert>
+								)}
+							</div>
+
 							<Button type="submit" size="lg" className=" mx-auto">
 								Actualizar
 							</Button>

@@ -48,10 +48,11 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
 	const json = await request.json()
-	console.log(json)
+
 	const { userId, dni, firstName, lastName, birthDate, phone, address, photo } = json
 	const id = Number(userId)
 	const newDate = new Date(birthDate)
+	console.log(json)
 	try {
 		const schema = Joi.object({
 			userId: Joi.number().required().messages({
@@ -62,7 +63,7 @@ export async function POST(request: Request) {
 			dni: Joi.string().required().min(10).max(10).messages({
 				"any.required": "Cedula es requerida",
 				"string.base": "La cédula solo contiene números",
-				"string.empty": "La cédula es contiene solo números",
+				"string.empty": "La cédula está vacio",
 				"string.min": "La cédula debe tener al menos 10 dígitos",
 				"string.max": "La cédula no puede tener más de 10 dígitos",
 			}),
@@ -90,14 +91,14 @@ export async function POST(request: Request) {
 				"string.max": "El telefono no puede tener más de 10 dígitos",
 			}),
 			address: Joi.string().required().messages({
-				"any.required": "La calle requerida",
-				"string.base": "La calle no tiene formato correcto",
-				"string.empty": "La calle está vacio",
+				"any.required": "La dirreción requerido",
+				"string.base": "La dirreción tiene que ser solo letras",
+				"string.empty": "La dirreción está vacio",
 			}),
 			photo: Joi.string().required().messages({
-				"any.required": "La descripcion es requerida",
+				"any.required": "Selecione una foto es requerida",
 				"string.base": "La descripcion debe usar caracteres válidos",
-				"string.empty": "La descripcion está vacio",
+				"string.empty": "Selecione una foto",
 			}),
 		})
 		const { error } = schema.validate({ dni, firstName, lastName, birthDate, phone, address, photo, userId })
@@ -114,7 +115,7 @@ export async function POST(request: Request) {
 		return NextResponse.json(usuarioWithoutData, { status: 201 })
 	} catch (error: any) {
 		if (error.code === "P2002") {
-			return new NextResponse("Ya existe id", {
+			return new NextResponse("Ya existe registro", {
 				status: 409,
 			})
 		}
@@ -128,8 +129,10 @@ export async function PATCH(request: Request) {
 	const { userId, dni, firstName, lastName, birthDate, phone, address, photo } = json
 	const id = Number(userId)
 	const newDate = new Date(birthDate)
+
+	console.log(json)
 	try {
-		if (!verificarCedula(json.dni)) {
+		if (!verificarCedula(dni)) {
 			return new NextResponse(`Cedula no es valida`, { status: 400 })
 		}
 
@@ -181,7 +184,7 @@ export async function PATCH(request: Request) {
 			}),
 		})
 
-		const { error } = schema.validate(json)
+		const { error } = schema.validate({ userId, dni, firstName, lastName, birthDate, phone, address, photo })
 		if (error) {
 			return new NextResponse(error.message, { status: 400 })
 		}
@@ -189,7 +192,6 @@ export async function PATCH(request: Request) {
 		const usuario = await prisma.person.update({
 			where: { userId: id },
 			data: {
-				dni,
 				firstName,
 				lastName,
 				birthDate: newDate,
