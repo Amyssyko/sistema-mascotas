@@ -26,25 +26,30 @@ import {
 	InboxIcon,
 	InformationCircleIcon,
 } from "@heroicons/react/24/outline"
+import Link from "next/link"
 
 // profile menu component
 const profileMenuItems = [
 	{
 		label: "Mi Perfil",
 		icon: UserCircleIcon,
+		link: "/dashboard/perfil",
 	},
 	{
 		label: "Editar Perfil",
 		icon: Cog6ToothIcon,
+		link: "/dashboard/editperfil",
 	},
 	{
 		label: "Peticiones",
 		icon: InboxArrowDownIcon,
+		link: "/dashboard/peticiones",
 	},
 
 	{
 		label: "Cerrar Sesión",
 		icon: PowerIcon,
+		link: "/dashboard/cerrar",
 	},
 ]
 
@@ -75,29 +80,31 @@ function ProfileMenu() {
 				</Button>
 			</MenuHandler>
 			<MenuList className="p-1">
-				{profileMenuItems.map(({ label, icon }, key) => {
+				{profileMenuItems.map(({ label, icon, link }, key) => {
 					const isLastItem = key === profileMenuItems.length - 1
 					return (
-						<MenuItem
-							key={label}
-							onClick={closeMenu}
-							className={`flex items-center gap-2 rounded ${
-								isLastItem ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10" : ""
-							}`}
-						>
-							{React.createElement(icon, {
-								className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
-								strokeWidth: 2,
-							})}
-							<Typography
-								as="span"
-								variant="small"
-								className="font-normal"
-								color={isLastItem ? "red" : "inherit"}
+						<Link href={link} key={key}>
+							<MenuItem
+								key={label}
+								onClick={closeMenu}
+								className={`flex items-center gap-2 rounded ${
+									isLastItem ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10" : ""
+								}`}
 							>
-								{label}
-							</Typography>
-						</MenuItem>
+								{React.createElement(icon, {
+									className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
+									strokeWidth: 2,
+								})}
+								<Typography
+									as="span"
+									variant="small"
+									className="font-normal"
+									color={isLastItem ? "red" : "inherit"}
+								>
+									{label}
+								</Typography>
+							</MenuItem>
+						</Link>
 					)
 				})}
 			</MenuList>

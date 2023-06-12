@@ -43,7 +43,7 @@ model Person {
   firstName String
   lastName  String
   birthDate DateTime
-  phone     Int
+  phone     String
   address   String
   photo     String?
   userId    Int        @unique

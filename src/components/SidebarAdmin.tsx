@@ -30,7 +30,7 @@ import { LogOut } from "./Bottom/LogOut"
 
 export default function SidebarAdmin() {
 	const { data } = useSession()
-	console.log(data)
+
 	const [open, setOpen] = React.useState(0)
 	const [openAlert, setOpenAlert] = React.useState(true)
 

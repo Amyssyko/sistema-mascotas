@@ -8,32 +8,23 @@ import * as React from "react"
 import Loading from "@/components/Loading"
 import LayoutDashboard from "@/components/Layout/LayoutDashboard"
 import SigninButton from "@/components/SigninButton"
+import { useRouter } from "next/navigation"
+import NoAdmin from "@/components/NoAdmin"
 
 function Page() {
 	const { data: session } = useSession()
 	const [isClicked, setisClicked] = React.useState(false)
 
-	//console.log(session)
+	const router = useRouter()
+
 	if (session === undefined) {
-		return (
-			<>
-				<Loading />
-			</>
-		)
+		return <Loading />
 	}
-	if (!session?.user.role || session?.user.role === "user") {
-		return (
-			<>
-				<h1>No es admin</h1>
-				<Link
-					href="/"
-					className="bg-blue-500 border rounded-lg mx-auto
-				"
-				>
-					Inicio
-				</Link>
-			</>
-		)
+	if (!session?.user.role || session?.user.role === "USER") {
+		setTimeout(() => {
+			router.replace("/")
+		}, 2000)
+		return <NoAdmin />
 	}
 	return (
 		<div>

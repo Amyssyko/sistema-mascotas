@@ -11,33 +11,47 @@ import { toast } from "react-hot-toast"
 import { useRouter } from "next/navigation"
 import { Alert, Card, Input, Typography } from "@material-tailwind/react"
 
-export default function SignInSide() {
+export default function Login() {
 	const router = useRouter()
 
+	const [formValues, setFormValues] = React.useState({
+		email: "",
+		password: "",
+	})
 	const { myError, isErrored, handleError, resetError } = useError()
+
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target
+		setFormValues((prevState) => ({
+			...prevState,
+			[name]: value,
+		}))
+	}
 
 	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
-		resetError()
-		const formData = new FormData(event.currentTarget)
-		const email = formData.get("email")
-		const password = formData.get("password")
-		//console.log(email + " " + password)
-		// Validación en el frontend
+		const { email, password } = formValues
+		//resetError()
+		//const formData = new FormData(event.currentTarget)
+		//const email = formData.get("email")
+		//const password = formData.get("password")
+
 		const isEmailEmpty = !email
 		const isPasswordEmpty = !password
 
 		const errorMessage =
-			isEmailEmpty || isPasswordEmpty
-				? `${isEmailEmpty ? "Ingrese un correo." : ""}
-			 ${isPasswordEmpty ? "Ingrese una contraseña." : ""}`
+			isEmailEmpty && isPasswordEmpty
+				? "Ingrese las credenciales."
+				: isEmailEmpty
+				? "Correo es requerido. "
+				: isPasswordEmpty
+				? "Contraseña es requerida."
 				: ""
 
 		if (errorMessage) {
 			handleError(errorMessage)
 			return
 		}
-		//console.log(email + " " + password)
 
 		const result = await signIn("credentials", {
 			email,
@@ -46,9 +60,11 @@ export default function SignInSide() {
 			callbackUrl: "/",
 		})
 
-		console.log(result)
-
 		if (result?.error === "CredentialsSignin") {
+			setFormValues({
+				email: "",
+				password: "",
+			})
 			toast.error("Credenciales Invalidas", {
 				duration: 1000,
 				position: "top-right",
@@ -63,12 +79,21 @@ export default function SignInSide() {
 				},
 			})
 			console.error("Credenciales Invalidas (401)")
-
 			handleError("Credenciales Invalidas")
 		}
 		if (result?.url) {
-			//console.log("usuario ingreso")
-			router.push("/")
+			router.replace("/")
+			toast.success("Sesión Iniciada", {
+				duration: 3000,
+				position: "top-center",
+
+				icon: "🐕🐈",
+
+				iconTheme: {
+					primary: "#000",
+					secondary: "#fff",
+				},
+			})
 		}
 	}
 
@@ -114,6 +139,8 @@ export default function SignInSide() {
 									label="Email"
 									type="text"
 									placeholder="example@example.com"
+									value={formValues.email}
+									onChange={handleInputChange}
 								/>
 								<Input
 									type="password"
@@ -122,21 +149,25 @@ export default function SignInSide() {
 									size="lg"
 									label="Password"
 									placeholder="********"
+									value={formValues.password}
+									onChange={handleInputChange}
 								/>
 							</div>
-							{isErrored && (
-								<Alert color="orange" variant="ghost">
-									{myError?.message}
-								</Alert>
-							)}
+							<div>
+								{isErrored && (
+									<Alert color="orange" variant="ghost" className=" text-sm">
+										{myError?.message}
+									</Alert>
+								)}
+							</div>
 							<Button type="submit" className="mt-6" fullWidth>
 								Ingresar
 							</Button>
 							<Typography color="gray" className="mt-4 text-center font-normal">
-								Already have an account?{" "}
+								No tienes una cuentas?
 								<a
 									href="/auth/register"
-									className="font-medium text-blue-500 transition-colors hover:text-blue-700"
+									className="font-medium text-blue-500 transition-colors hover:text-blue-700 ml-1"
 								>
 									Registrarse
 								</a>

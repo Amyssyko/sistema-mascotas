@@ -27,31 +27,158 @@ export async function GET(request: Request) {
 	function isEmptyObject(obj: any): boolean {
 		return Object.keys(obj).length === 0
 	}
+	const users = await prisma.person.findMany({
+		include: { user: {} },
+	})
 
-	const users = await prisma.person.findMany()
 	if (isEmptyObject(users)) {
-		return new NextResponse("No existen datos de usuarios", { status: 201 })
+		return new NextResponse("No existen datos de usuarios", { status: 404 })
 	}
-	return new NextResponse(JSON.stringify(users), { status: 200 })
+
+	const combinedUsers = users.map(({ createdAt, updatedAt, user, ...rest }) => ({
+		...rest,
+		...user,
+		id: undefined,
+		createdAt: undefined,
+		updatedAt: undefined,
+	}))
+
+	return NextResponse.json(combinedUsers, { status: 200 })
 }
 
 export async function POST(request: Request) {
 	const json = await request.json()
+	console.log(json)
+	const { userId, dni, firstName, lastName, birthDate, phone, address, photo } = json
+	const id = Number(userId)
+	const newDate = new Date(birthDate)
+	try {
+		const schema = Joi.object({
+			userId: Joi.number().required().messages({
+				"any.required": "ID es requerido",
+				"number.base": "ID es tipo numero",
+				"number.empty": "ID está vacio",
+			}),
+			dni: Joi.string().required().min(10).max(10).messages({
+				"any.required": "Cedula es requerida",
+				"string.base": "La cédula solo contiene números",
+				"string.empty": "La cédula es contiene solo números",
+				"string.min": "La cédula debe tener al menos 10 dígitos",
+				"string.max": "La cédula no puede tener más de 10 dígitos",
+			}),
+			birthDate: Joi.date().required().max("now").messages({
+				"any.required": "La fecha es requerida",
+				"date.base": "La fecha debe ser una válida",
+				"date.empty": "La fecha no puede estar vacía",
+				"date.max": "La fecha no puede ser posterior a la fecha actual",
+			}),
+			firstName: Joi.string().required().messages({
+				"any.required": "Nombre requerido",
+				"string.base": "Nombre tiene que ser solo letras",
+				"string.empty": "Nombre está vacio",
+			}),
+			lastName: Joi.string().required().messages({
+				"any.required": "Apellido requerido",
+				"string.base": "Apellido tiene que ser solo letras",
+				"string.empty": "Apellido está vacio",
+			}),
+			phone: Joi.string().required().min(10).max(10).messages({
+				"any.required": "El telefono es requerido",
+				"string.base": "El telefono debe ser solo números",
+				"string.empty": "El telefono está vacio",
+				"string.min": "El telefono debe tener al menos 10 dígitos",
+				"string.max": "El telefono no puede tener más de 10 dígitos",
+			}),
+			address: Joi.string().required().messages({
+				"any.required": "La calle requerida",
+				"string.base": "La calle no tiene formato correcto",
+				"string.empty": "La calle está vacio",
+			}),
+			photo: Joi.string().required().messages({
+				"any.required": "La descripcion es requerida",
+				"string.base": "La descripcion debe usar caracteres válidos",
+				"string.empty": "La descripcion está vacio",
+			}),
+		})
+		const { error } = schema.validate({ dni, firstName, lastName, birthDate, phone, address, photo, userId })
+		if (error) {
+			return new NextResponse(error.message, { status: 400 })
+		}
 
+		const usuario = await prisma.person.create({
+			data: { dni, firstName, lastName, birthDate: newDate, phone, address, photo, userId: id },
+		})
+
+		const { createdAt, updatedAt, ...usuarioWithoutData } = usuario
+
+		return NextResponse.json(usuarioWithoutData, { status: 201 })
+	} catch (error: any) {
+		if (error.code === "P2002") {
+			return new NextResponse("Ya existe id", {
+				status: 409,
+			})
+		}
+
+		return NextResponse.json(error.message, { status: 500 })
+	}
+}
+
+export async function PATCH(request: Request) {
+	const json = await request.json()
+	const { userId, dni, firstName, lastName, birthDate, phone, address, photo } = json
+	const id = Number(userId)
+	const newDate = new Date(birthDate)
 	try {
 		if (!verificarCedula(json.dni)) {
-			return new NextResponse(`${json.dni} no es valida`, { status: 400 })
+			return new NextResponse(`Cedula no es valida`, { status: 400 })
 		}
 
 		const schema = Joi.object({
-			dni: Joi.string().required().min(10),
-			firstName: Joi.string().required(),
-			lastName: Joi.string().required(),
-			birthDate: Joi.string().required(),
-			phone: Joi.string().required(),
-			address: Joi.string().required(),
-			photo: Joi.string().required(),
-			userId: Joi.string().required(),
+			userId: Joi.number().required().messages({
+				"any.required": "ID es requerido",
+				"number.base": "ID es tipo numero",
+				"number.empty": "ID está vacio",
+			}),
+			dni: Joi.string().required().min(10).max(10).messages({
+				"any.required": "Cedula es requerida",
+				"string.base": "La cédula solo contiene números",
+				"string.empty": "La cédula es contiene solo números",
+				"string.min": "La cédula debe tener al menos 10 dígitos",
+				"string.max": "La cédula no puede tener más de 10 dígitos",
+			}),
+			birthDate: Joi.date().required().max("now").messages({
+				"any.required": "La fecha es requerida",
+				"date.base": "La fecha debe ser una válida",
+				"date.empty": "La fecha no puede estar vacía",
+				"date.max": "La fecha no puede ser posterior a la fecha actual",
+			}),
+			firstName: Joi.string().required().messages({
+				"any.required": "Nombre requerido",
+				"string.base": "Nombre tiene que ser solo letras",
+				"string.empty": "Nombre está vacio",
+			}),
+			lastName: Joi.string().required().messages({
+				"any.required": "Apellido requerido",
+				"string.base": "Apellido tiene que ser solo letras",
+				"string.empty": "Apellido está vacio",
+			}),
+			phone: Joi.string().required().min(10).max(10).messages({
+				"any.required": "El telefono es requerido",
+				"string.base": "El telefono debe ser solo números",
+				"string.empty": "El telefono está vacio",
+				"string.min": "El telefono debe tener al menos 10 dígitos",
+				"string.max": "El telefono no puede tener más de 10 dígitos",
+			}),
+			address: Joi.string().required().messages({
+				"any.required": "La calle requerida",
+				"string.base": "La calle no tiene formato correcto",
+				"string.empty": "La calle está vacio",
+			}),
+			photo: Joi.string().required().messages({
+				"any.required": "La descripcion es requerida",
+				"string.base": "La descripcion debe usar caracteres válidos",
+				"string.empty": "La descripcion está vacio",
+			}),
 		})
 
 		const { error } = schema.validate(json)
@@ -59,15 +186,25 @@ export async function POST(request: Request) {
 			return new NextResponse(error.message, { status: 400 })
 		}
 
-		const driver = await prisma.person.create({
-			data: json,
+		const usuario = await prisma.person.update({
+			where: { userId: id },
+			data: {
+				dni,
+				firstName,
+				lastName,
+				birthDate: newDate,
+				phone,
+				address,
+				photo,
+			},
 		})
 
-		return new NextResponse(JSON.stringify(driver), {
-			status: 201,
-			headers: { "Content-Type": "application/json" },
-		})
+		const { createdAt, updatedAt, ...userwithoutData } = usuario
+
+		return NextResponse.json(userwithoutData, { status: 200 })
 	} catch (error: any) {
+		console.log(error)
+
 		if (error.code === "P2002") {
 			return new NextResponse(`Ya existe cedula "${json.dni}"`, {
 				status: 409,
@@ -78,6 +215,11 @@ export async function POST(request: Request) {
 				status: 400,
 			})
 		}
-		return new NextResponse(error.message, { status: 500 })
+		if (error.code === "P2025") {
+			return new NextResponse(`No existe usuario que actualizar"`, {
+				status: 409,
+			})
+		}
+		return NextResponse.json(error.message, { status: 500 })
 	}
 }

@@ -13,24 +13,24 @@ interface RequestBody {
 
 export async function POST(request: Request) {
 	const json: RequestBody = await request.json()
-	console.log(`backend ${JSON.stringify(json)}`)
+
 	try {
 		const schema = Joi.object({
 			email: Joi.string()
-				.email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "org", "es"] } })
+				.email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "org", "es", "ec"] } })
 				.required()
 				.messages({
-					"string.empty": "Correo es requerido",
-					//"any.required": "Correo es requerido",
-					"string.email": "Correo no válido",
+					"string.empty": "El correo es requerido",
+					"string.email": "El correo no es válido",
 				}),
 			password: Joi.string().required().pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z]).{8,}$")).messages({
-				//"any.required": "Contraseña es requerida",
-				"string.empty": "Contraseña es requerida",
+				"any.required": "Contraseña es requerida",
+				"string.empty": "Contraseña está vacia",
 				"string.pattern.base":
 					"La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula",
 			}),
-			confirm_password: Joi.string().valid(Joi.ref("password")).required().messages({
+			confirm_password: Joi.string().required().valid(Joi.ref("password")).messages({
+				"string.empty": "La confirmación de contraseña es requerida",
 				"any.only": "Las contraseñas no coinciden",
 			}),
 		})
@@ -41,25 +41,17 @@ export async function POST(request: Request) {
 			return new NextResponse(error.message, { status: 400 })
 		}
 
-		const driver = await prisma.user.create({
+		const usuario = await prisma.user.create({
 			data: { email: json.email, password: await bcrypt.hash(json.password, 10) },
 		})
 
-		const { password, ...result } = driver
-		console.log(result)
-		return new NextResponse(JSON.stringify(result), {
-			status: 201,
-			headers: { "Content-Type": "application/json" },
-		})
+		const { password, ...result } = usuario
+
+		return NextResponse.json(result, { status: 201 })
 	} catch (error: any) {
 		if (error.code === "P2002") {
 			return new NextResponse(`Ya existe usuario registrado`, {
 				status: 409,
-			})
-		}
-		if (error.code === "P2000") {
-			return new NextResponse("Verifique los la información ingresada", {
-				status: 400,
 			})
 		}
 		return new NextResponse(error.message, { status: 500 })

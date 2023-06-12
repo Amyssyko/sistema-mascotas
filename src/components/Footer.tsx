@@ -1,7 +1,9 @@
 "use client"
 import { Avatar, Typography } from "@material-tailwind/react"
+import { useSession } from "next-auth/react"
 
 function Footer() {
+	const { data: session } = useSession()
 	return (
 		<footer className="mx-auto my-auto w-full  bg-white p-4">
 			<div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -37,21 +39,25 @@ function Footer() {
 							Contribute
 						</Typography>
 					</li>
-					<li>
-						<Typography
-							as="a"
-							href="#"
-							color="blue-gray"
-							className="font-normal transition-colors hover:text-blue-500 focus:text-blue-500"
-						>
-							Contact Us
-						</Typography>
-					</li>
+					{session?.user && session?.user.role !== "USER" ? (
+						<li>
+							<Typography
+								as="a"
+								href="/dashboard"
+								color="blue-gray"
+								className="font-normal transition-colors hover:text-blue-500 focus:text-blue-500"
+							>
+								Dashboard
+							</Typography>
+						</li>
+					) : (
+						""
+					)}
 				</ul>
 			</div>
 			<hr className="my-auto mx-auto border-blue-gray-50" />
 			<Typography color="blue-gray" className="text-center font-normal">
-				{`© ${new Date().getFullYear()} Mi mascota Feliz - UTC`}
+				{`© ${new Date().getFullYear()} Mi Mascota Feliz - UTC`}
 			</Typography>
 		</footer>
 	)

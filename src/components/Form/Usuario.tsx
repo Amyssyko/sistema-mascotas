@@ -1,5 +1,4 @@
 "use client"
-
 import React from "react"
 import {
 	Card,
@@ -25,19 +24,44 @@ import {
 	UserCircleIcon,
 } from "@heroicons/react/24/solid"
 
-export default function Usuario() {
+interface UsuarioProps {
+	id: string | number | undefined
+	correo: string | undefined
+}
+
+export default function Usuario({ id, correo }: UsuarioProps) {
+	const [formValues, setFormValues] = React.useState({
+		dni: "",
+		firstName: "",
+		lastName: "",
+		email: correo,
+		birthDate: "",
+		phone: "",
+		address: "",
+		photo: "",
+		userId: id,
+	})
+
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target
+		setFormValues((prevState) => ({
+			...prevState,
+			[name]: value,
+		}))
+	}
+
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
-		const formData = new FormData(event.currentTarget)
+		/*	const formData = new FormData(event.currentTarget)
 		const dni = formData.get("dni")
 		const firstName = formData.get("firstName")
 		const lastName = formData.get("lastName")
 		const birthDate = formData.get("birthDate")
 		const address = formData.get("address")
 		const photo = formData.get("photo")
-		//const rol = tipoRol
+		*/
 
-		console.log({ dni, firstName, lastName, birthDate, address, photo })
+		console.log(formValues)
 	}
 
 	return (
@@ -74,8 +98,8 @@ export default function Usuario() {
 										name="dni"
 										autoComplete="dni"
 										min="0"
-										//value={formatCardNumber(cardNumber)}
-										//onChange={(event) => setCardNumber(event.target.value)}
+										value={formValues.dni}
+										onChange={handleInputChange}
 										icon={<IdentificationIcon className="h-5 w-5 text-blue-gray-300" />}
 									/>
 
@@ -88,7 +112,8 @@ export default function Usuario() {
 										name="firstName"
 										autoComplete="firstName"
 										icon={<ExclamationCircleIcon className="h-5 w-5 text-blue-gray-300" />}
-
+										value={formValues.lastName}
+										onChange={handleInputChange}
 										//value={formatCardNumber(cardNumber)}
 										//onChange={(event) => setCardNumber(event.target.value)}
 										//icon={<IdentificationIcon className="h-5 w-5 text-blue-gray-300" />}
@@ -106,6 +131,8 @@ export default function Usuario() {
 											autoComplete="email"
 											containerProps={{ className: "min-w-[72px]" }}
 											icon={<EnvelopeIcon className="h-5 w-5 text-blue-gray-300" />}
+											value={formValues.email}
+											onChange={handleInputChange}
 										/>
 
 										<Input
@@ -117,6 +144,8 @@ export default function Usuario() {
 											autoComplete="lastName"
 											containerProps={{ className: "min-w-[72px]" }}
 											icon={<ExclamationCircleIcon className="h-5 w-5 text-blue-gray-300" />}
+											value={formValues.lastName}
+											onChange={handleInputChange}
 										/>
 									</div>
 								</div>
@@ -130,6 +159,8 @@ export default function Usuario() {
 											id="birthDate"
 											autoComplete="birthDate"
 											containerProps={{ className: "min-w-[72px]" }}
+											value={formValues.birthDate}
+											onChange={handleInputChange}
 										/>
 
 										<Input
@@ -140,6 +171,8 @@ export default function Usuario() {
 											id="phone"
 											autoComplete="phone"
 											icon={<PhoneIcon className="h-5 w-5 text-blue-gray-300" />}
+											value={formValues.phone}
+											onChange={handleInputChange}
 										/>
 									</div>
 								</div>
@@ -155,6 +188,8 @@ export default function Usuario() {
 											id="address"
 											autoComplete="address"
 											icon={<ExclamationCircleIcon className="h-5 w-5 text-blue-gray-300" />}
+											value={formValues.photo}
+											onChange={handleInputChange}
 										/>
 									</div>
 								</div>

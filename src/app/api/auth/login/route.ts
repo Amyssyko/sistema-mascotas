@@ -11,18 +11,18 @@ interface RequestBody {
 export async function POST(request: Request) {
 	try {
 		const { email, password }: RequestBody = await request.json()
-		//console.log({ email, password })
+
 		const schema = Joi.object({
 			email: Joi.string()
 				.email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "org", "es", "ec"] } })
 				.required()
 				.messages({
-					"string.empty": "Correo es requerido",
-					"string.email": "Correo no válido",
+					"string.empty": "El correo es requerido",
+					"string.email": "El correo no es válido",
 				}),
 			password: Joi.string().required().pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z]).{8,}$")).messages({
-				//"any.required": "Contraseña es requerida",
-				"string.empty": "Contraseña es requerida",
+				"any.required": "Contraseña es requerida",
+				"string.empty": "Contraseña está vacio",
 			}),
 		})
 
@@ -37,25 +37,21 @@ export async function POST(request: Request) {
 			include: {
 				person: true,
 			},
-			//rejectOnNotFound: false,
 		})
 
-		//console.log(data)
+		console.log(data)
 		if (data && (await bcrypt.compare(password, data.password))) {
 			//Desectroctura los datos
 			const { person, password, createdAt, updatedAt, ...userWithoutPerson } = data
 
 			const { ...userWithPerson } = {
 				...userWithoutPerson,
-				...(person || {}), // Si la persona existe, la incluye en el objeto combinado
+				...(person || {}),
 			}
 			const { createdAt: created, updatedAt: updated, ...dataFinal } = userWithPerson
 			console.log(dataFinal)
-			//console.log(userWithPerson)
-			//console.log(userWithoutPerson)
 
 			const accessToken = signJwtAccessToken(dataFinal)
-			//console.log(accessToken)
 			const result = { ...dataFinal, accessToken }
 			console.log(result)
 			return new Response(JSON.stringify(result), { status: 201 })
