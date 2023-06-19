@@ -56,7 +56,9 @@ model Person {
 model Pet {
   id          Int        @id @default(autoincrement())
   name        String
+  type        String?
   age         Int?
+  month       Int?
   breed       String?
   photo       String?
   description String?
@@ -68,47 +70,52 @@ model Pet {
 }
 
 enum AdoptionStatus {
-  recibida
-  pendiente
-  revisada
-  completada
-  rechazada
-  aprovada
+  Recibida
+  Pendiente
+  Rechazada
+  Aprovada
 }
 
 model StatusAdoptionPet {
   id          Int            @id @default(autoincrement())
-  status      AdoptionStatus @default(recibida)
-  description String?
+  type        String
+  status      AdoptionStatus @default(Recibida)
+  description String
   adoption    Adoption[]
 }
 
 //Solicitud
+enum StatusAdoption {
+  Tramitando
+  Completa
+  Rechazado
+}
+
 model Adoption {
   id                  Int                @id @default(autoincrement())
   pet                 Pet?               @relation(fields: [petId], references: [id])
-  petId               Int?
-  status              String
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
-  StatusAdoptionPet   StatusAdoptionPet? @relation(fields: [statusAdoptionPetId], references: [id])
-  statusAdoptionPetId Int?
+  petId               Int?               @unique
+  status              StatusAdoption     @default(Tramitando)
+  statusAdoptionPet   StatusAdoptionPet? @relation(fields: [statusAdoptionPetId], references: [id])
+  statusAdoptionPetId Int?               @unique
   Person              Person?            @relation(fields: [personDni], references: [dni])
   personDni           String?            @db.VarChar(10)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
 }
 
 enum PetStatus {
-  perdida
-  encontrada
+  Perdido
+  Encontrado
 }
 
 model LostPet {
   id          Int       @id @default(autoincrement())
   pet         Pet?      @relation(fields: [petId], references: [id])
-  petId       Int
+  petId       Int?      @unique
   location    String?
   description String?
-  status      PetStatus @default(perdida)
+  status      PetStatus @default(Perdido)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
