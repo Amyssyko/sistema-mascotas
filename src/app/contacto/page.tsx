@@ -1,4 +1,5 @@
 import Navbar from "@/components/CustomNavbar"
+import Footer from "@/components/Footer"
 import React from "react"
 
 function Page() {
@@ -10,6 +11,7 @@ function Page() {
 					<h1>Contacto</h1>\
 				</div>
 			</main>
+			<Footer />
 		</>
 	)
 }

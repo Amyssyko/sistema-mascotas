@@ -9,7 +9,7 @@ const SigninButton = () => {
 
 	if (session && session.user) {
 		return (
-			<Card className="w-56">
+			<Card className="w-56 mx-auto mt-24">
 				<CardHeader floated={false} className="h-36 flex items-center justify-center">
 					<Avatar
 						src="https://source.unsplash.com/random?wallpapers"

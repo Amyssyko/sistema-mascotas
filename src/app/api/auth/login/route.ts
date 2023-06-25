@@ -38,7 +38,6 @@ export async function POST(request: Request) {
 				person: true,
 			},
 		})
-
 		console.log(data)
 		if (data && (await bcrypt.compare(password, data.password))) {
 			//Desectroctura los datos
@@ -49,18 +48,16 @@ export async function POST(request: Request) {
 				...(person || {}),
 			}
 			const { createdAt: created, updatedAt: updated, ...dataFinal } = userWithPerson
-			console.log(dataFinal)
 
 			const accessToken = signJwtAccessToken(dataFinal)
 			const result = { ...dataFinal, accessToken }
-			console.log(result)
+
 			return new Response(JSON.stringify(result), { status: 201 })
 		} else {
 			//console.log("401")
 			return new Response(JSON.stringify("Credenciales inválidas"), { status: 401 })
 		}
 	} catch (error: any) {
-		console.log("Error Api Login")
 		console.error(error)
 
 		return new NextResponse(error.message, { status: 500 })

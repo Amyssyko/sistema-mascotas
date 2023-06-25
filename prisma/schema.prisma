@@ -30,12 +30,13 @@ model User {
 model Post {
   id          Int       @id @default(autoincrement())
   description String?
-  postDate    DateTime?
   isActived   Boolean
   User        User?     @relation(fields: [userId], references: [id])
   userId      Int?
   Pet         Pet?      @relation(fields: [petId], references: [id])
-  petId       Int?
+  petId       Int?      @unique
+  postDate    DateTime? @default(now())
+  postUpdate  DateTime? @updatedAt
 }
 
 model Person {
@@ -46,8 +47,8 @@ model Person {
   phone     String
   address   String
   photo     String?
-  userId    Int        @unique
-  user      User       @relation(fields: [userId], references: [id])
+  userId    Int?       @unique
+  user      User?      @relation(fields: [userId], references: [id])
   adoption  Adoption[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -56,52 +57,38 @@ model Person {
 model Pet {
   id          Int        @id @default(autoincrement())
   name        String
-  type        String?
+  typePet     String?
   age         Int?
   month       Int?
   breed       String?
   photo       String?
   description String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
   adoption    Adoption[]
   lostpet     LostPet[]
   post        Post[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
-enum AdoptionStatus {
-  Recibida
-  Pendiente
-  Rechazada
-  Aprovada
-}
-
-model StatusAdoptionPet {
-  id          Int            @id @default(autoincrement())
-  type        String
-  status      AdoptionStatus @default(Recibida)
-  description String
-  adoption    Adoption[]
-}
-
-//Solicitud
 enum StatusAdoption {
+  Recibida
   Tramitando
   Completa
   Rechazado
 }
 
 model Adoption {
-  id                  Int                @id @default(autoincrement())
-  pet                 Pet?               @relation(fields: [petId], references: [id])
-  petId               Int?               @unique
-  status              StatusAdoption     @default(Tramitando)
-  statusAdoptionPet   StatusAdoptionPet? @relation(fields: [statusAdoptionPetId], references: [id])
-  statusAdoptionPetId Int?               @unique
-  Person              Person?            @relation(fields: [personDni], references: [dni])
-  personDni           String?            @db.VarChar(10)
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
+  id          Int            @id @default(autoincrement())
+  pet         Pet?           @relation(fields: [petId], references: [id])
+  petId       Int?           @unique
+  jobType     String
+  income      Decimal        @db.Money
+  description String
+  status      StatusAdoption @default(Tramitando)
+  person      Person?        @relation(fields: [personDni], references: [dni])
+  personDni   String?        @db.VarChar(10)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 }
 
 enum PetStatus {
@@ -110,12 +97,12 @@ enum PetStatus {
 }
 
 model LostPet {
-  id          Int       @id @default(autoincrement())
-  pet         Pet?      @relation(fields: [petId], references: [id])
-  petId       Int?      @unique
-  location    String?
-  description String?
-  status      PetStatus @default(Perdido)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           Int       @id @default(autoincrement())
+  pet          Pet?      @relation(fields: [petId], references: [id])
+  petId        Int?      @unique
+  lostLocation String?
+  description  String?
+  status       PetStatus @default(Perdido)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }

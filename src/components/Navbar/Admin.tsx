@@ -1,5 +1,6 @@
 "use client"
 import React from "react"
+import { FaSolidDog } from "solid-icons/fa"
 import {
 	Navbar,
 	MobileNav,

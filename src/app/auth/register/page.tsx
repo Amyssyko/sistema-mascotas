@@ -4,7 +4,7 @@ import * as React from "react"
 import { Card, Typography, Input, Button, Alert } from "@material-tailwind/react"
 
 import { useError } from "@hooks/useError"
-import axios, { AxiosResponse } from "axios"
+import axios, { AxiosResponse, AxiosError } from "axios"
 import { toast } from "react-hot-toast"
 import { useRouter } from "next/navigation"
 import { doesNotMatch } from "assert"
@@ -81,8 +81,9 @@ export default function SignUp() {
 					},
 				})
 			}
-			router.replace("./auth/login")
-		} catch (error: any) {
+			router.replace("/auth/login")
+		} catch (error: Error | AxiosError | any) {
+			console.error(error)
 			handleError(error.response.data)
 			setFormValues({
 				email: "",
@@ -163,7 +164,7 @@ export default function SignUp() {
 							)}
 						</div>
 						<Button type="submit" className="mt-6" fullWidth>
-							Ingresar
+							Registrarse
 						</Button>
 						<Typography color="gray" className="mt-4 text-center font-normal">
 							Ya tienes una cuenta?

@@ -43,10 +43,12 @@ function LayoutDashboard({ children }: { children: React.ReactNode }) {
 		<div className="w-full h-screen bg-white flex flex-col">
 			{!isMobile && <SidebarAdmin />}
 			<Admin />
+
+			{/**cambiar de borde contenerdor */}
 			<div
 				className={`ml-${
 					isMobile ? "0" : "64"
-				} border-red-600  sm:ml-0 md:ml-0 lg:ml-64 xl:64 border bg-blue-800 flex-1 overflow-hidden`}
+				}  border-transparent  sm:ml-0 md:ml-0 lg:ml-64 xl:64 border  flex-1 overflow-hidden`}
 				style={{ height: `${availableHeight}px` }}
 			>
 				{children}
@@ -69,7 +71,7 @@ function LayoutDashboard({ children }: { children: React.ReactNode }) {
 					<SidebarAdmin />
 				</div>
 			)}
-			{isMobile && (
+			{/**{isMobile && (
 				<Button
 					size="sm"
 					className={`fixed top-2 right-2 p-2 bg-blue-500 mx-auto text-white rounded-md z-50 ${
@@ -79,7 +81,7 @@ function LayoutDashboard({ children }: { children: React.ReactNode }) {
 				>
 					Open Sidebar
 				</Button>
-			)}
+			)} */}
 			<Footer />
 		</div>
 	)

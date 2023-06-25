@@ -28,6 +28,7 @@ import axios from "axios"
 import { useError } from "@/hooks/useError"
 import { toast } from "react-hot-toast"
 import { useRouter } from "next/navigation"
+import { signOut } from "next-auth/react"
 
 interface UsuarioProps {
 	id: string | number | undefined
@@ -60,23 +61,14 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 	}
 
 	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-		console.log("crear")
 		event.preventDefault()
-		/*	const formData = new FormData(event.currentTarget)
-		const dni = formData.get("dni")
-		const firstName = formData.get("firstName")
-		const lastName = formData.get("lastName")
-		const birthDate = formData.get("birthDate")
-		const address = formData.get("address")
-		const photo = formData.get("photo")
-		*/
-		console.log(formValues)
+
 		const { dni, firstName, lastName, email, birthDate, phone, address, photo, userId } = formValues
 
 		try {
 			if (cedula !== undefined || cedula) {
 				console.log("update")
-				const response = await axios.patch("/api/usuarios", {
+				const response = await axios.patch("/api/v2/persons", {
 					dni,
 					firstName,
 					lastName,
@@ -105,8 +97,7 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 				}
 				router.refresh()
 			} else {
-				console.log("post")
-				const response = await axios.post("/api/usuarios", {
+				const response = await axios.post("/api/v2/persons", {
 					dni,
 					firstName,
 					lastName,
@@ -135,9 +126,9 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 					})
 				}
 				router.refresh()
+				signOut()
 			}
 		} catch (error: any) {
-			console.log(error)
 			handleError(error.response.data)
 
 			console.error(`${error.response.data} (${error.response.status})`)
@@ -157,7 +148,7 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 	}
 
 	return (
-		<Card className="w-full max-w-[32rem] bg-white">
+		<Card className="w-full max-w-[32rem] bg-white mx-auto mt-24">
 			<CardHeader
 				color="blue"
 				floated={false}

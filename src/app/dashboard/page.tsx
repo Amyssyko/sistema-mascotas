@@ -1,9 +1,6 @@
 "use client"
 
-import { UsuarioCardData } from "@/components/Cards/UsuarioCardData"
-import Admin from "@/components/Navbar/Admin"
 import { useSession } from "next-auth/react"
-import Link from "next/link"
 import * as React from "react"
 import Loading from "@/components/Loading"
 import LayoutDashboard from "@/components/Layout/LayoutDashboard"
@@ -13,8 +10,8 @@ import NoAdmin from "@/components/NoAdmin"
 
 function Page() {
 	const { data: session } = useSession()
-	const [isClicked, setisClicked] = React.useState(false)
 
+	console.log(session?.user.role)
 	const router = useRouter()
 
 	if (session === undefined) {
@@ -24,6 +21,8 @@ function Page() {
 		setTimeout(() => {
 			router.replace("/")
 		}, 2000)
+		//? Si no es administrador muestra mensaje "Sin privilegios"
+		//? Envia al inicio
 		return <NoAdmin />
 	}
 	return (
@@ -38,9 +37,6 @@ function Page() {
 						atque accusantium voluptas sunt veniam!
 					</p>
 				</section>
-				<div>
-					<UsuarioCardData bool={isClicked} />
-				</div>
 			</LayoutDashboard>
 		</div>
 	)
