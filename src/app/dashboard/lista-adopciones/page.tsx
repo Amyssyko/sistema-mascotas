@@ -33,7 +33,7 @@ const TABLE_HEAD = [
 
 export default function Page() {
 	const { data: session } = useSession()
-	const role = session?.user.role
+	const rol = session?.user.role
 	const [pets, setPets] = useState([])
 
 	const router = useRouter()
@@ -98,8 +98,6 @@ export default function Page() {
 		}
 	}
 
-	const foundObject = pets.find((obj) => obj.hasOwnProperty("petId"))
-
 	return (
 		<LayoutDashboard>
 			<Card className="h-full w-full">
@@ -133,7 +131,7 @@ export default function Page() {
 							</tr>
 						</thead>
 						<tbody>
-							{foundObject &&
+							{pets &&
 								pets.map(
 									(
 										{
@@ -182,7 +180,7 @@ export default function Page() {
 												<td className={classes}>
 													<div className="flex flex-col">
 														<Typography variant="small" color="blue-gray" className="font-normal">
-															{updatedAt?.slice(0, 10)}
+															{updatedAt.slice(0, 10)}
 														</Typography>
 													</div>
 												</td>

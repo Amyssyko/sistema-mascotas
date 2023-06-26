@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 	const json = await request.json()
 	const { description, lostLocation, status } = json
 	const petId = Number(json.petId)
-	console.log(json)
+
 	try {
 		const schema = Joi.object({
 			/**id: Joi.number().required().messages({

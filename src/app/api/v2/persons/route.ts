@@ -110,7 +110,7 @@ export async function PATCH(request: Request) {
 	const { dni, firstName, lastName, phone, address, photo } = json
 	const userId = Number(json.userId)
 	const birthDate = new Date(json?.birthDate)
-	console.log(json)
+
 	try {
 		const schema = Joi.object({
 			userId: Joi.number().required().messages({
@@ -185,8 +185,6 @@ export async function PATCH(request: Request) {
 
 		return NextResponse.json(userwithoutData, { status: 200 })
 	} catch (error: any) {
-		console.log(error)
-
 		if (error.code === "P2002") {
 			return new NextResponse(`Ya existe cedula "${json.dni}"`, {
 				status: 409,

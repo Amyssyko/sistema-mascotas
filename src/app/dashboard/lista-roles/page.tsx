@@ -22,7 +22,7 @@ const TABLE_HEAD = ["ID", "Email", "Contraseña", "Role", "Creado", "Actualizado
 
 export default function Page() {
 	const { data: session } = useSession()
-	const role = session?.user.role
+	const rol = session?.user.role
 	const [roles, setRoles] = useState([])
 
 	const router = useRouter()
@@ -34,7 +34,6 @@ export default function Page() {
 				const data = await response.json()
 				setRoles(data)
 			} catch (error: Error | AxiosError | any) {
-				console.log(error)
 				console.error(`${error?.response?.data} (${error?.response?.status})`)
 				if (error.response && error.response.status) {
 					toast.error(error.response.data, {
@@ -197,7 +196,7 @@ export default function Page() {
 										</td>
 										<td className={classes}>
 											<Button
-												disabled={role !== "SUPERADMIN"}
+												disabled={rol !== "SUPERADMIN"}
 												onClick={() => handleDelete({ id })}
 												size="sm"
 												color="red"

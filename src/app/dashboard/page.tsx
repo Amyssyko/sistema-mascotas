@@ -11,7 +11,6 @@ import NoAdmin from "@/components/NoAdmin"
 function Page() {
 	const { data: session } = useSession()
 
-	console.log(session?.user.role)
 	const router = useRouter()
 
 	if (session === undefined) {

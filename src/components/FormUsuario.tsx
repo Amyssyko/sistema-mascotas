@@ -38,7 +38,6 @@ function FormUsuario() {
 
 	const handleChange = (event: any) => {
 		setTipoRol(event.target.value)
-		console.log(tipoRol)
 	}
 
 	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -52,7 +51,6 @@ function FormUsuario() {
 		const photo = formData.get("photo")
 		const rol = tipoRol
 		//sigue errores y api
-		console.log({ dni, firstName, lastName, birthDate, address, photo, rol })
 	}
 
 	const ROLES = ["admin", "user", "superadmin"]

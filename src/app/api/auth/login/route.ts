@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 				person: true,
 			},
 		})
-		console.log(data)
+
 		if (data && (await bcrypt.compare(password, data.password))) {
 			//Desectroctura los datos
 			const { person, password, createdAt, updatedAt, ...userWithoutPerson } = data
@@ -54,7 +54,6 @@ export async function POST(request: Request) {
 
 			return new Response(JSON.stringify(result), { status: 201 })
 		} else {
-			//console.log("401")
 			return new Response(JSON.stringify("Credenciales inválidas"), { status: 401 })
 		}
 	} catch (error: any) {

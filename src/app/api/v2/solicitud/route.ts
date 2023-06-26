@@ -9,7 +9,6 @@ export async function POST(request: Request) {
 
 	const json = await request.json()
 
-	console.log(json)
 	//destructuracion de datos
 
 	const { jobType, income, description, personDni } = json

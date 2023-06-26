@@ -31,7 +31,7 @@ const TABLE_HEAD = [
 
 export default function Page() {
 	const { data: session } = useSession()
-	const role = session?.user.role
+	const rol = session?.user.role
 	const [pets, setPets] = useState([])
 
 	const router = useRouter()
@@ -42,7 +42,6 @@ export default function Page() {
 				const response = await fetch("http://localhost:3000/api/v2/pets")
 				const data = await response.json()
 				setPets(data)
-				//console.log(data)
 			} catch (error: Error | AxiosError | any) {
 				console.error(`${error.response.data} (${error.response.status})`)
 				if (error.response && error.response.status) {
@@ -211,7 +210,7 @@ export default function Page() {
 										</td>
 										<td className={classes}>
 											<Button
-												disabled={role !== "SUPERADMIN"}
+												disabled={rol !== "SUPERADMIN"}
 												onClick={() => handleDelete({ id })}
 												size="sm"
 												color="red"

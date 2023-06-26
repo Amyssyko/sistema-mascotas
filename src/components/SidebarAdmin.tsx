@@ -61,7 +61,7 @@ export default function SidebarAdmin() {
 						/>
 					}
 				>
-					<ListItem className="p-0" selected={open === 1}>
+					<ListItem className="p-0 " selected={open === 1}>
 						<AccordionHeader onClick={() => handleOpen(1)} className="border-b-0 p-3">
 							<ListItemPrefix>
 								<svg

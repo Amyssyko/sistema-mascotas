@@ -7,7 +7,7 @@ interface DataForm {
 }
 
 interface User {
-	id?: number
+	id?: string | number | undefined
 	email?: string
 	role?: string
 	dni?: string
@@ -52,12 +52,9 @@ const handler = NextAuth({
 					},
 				})
 				if (!res.ok) {
-					//console.log("error")
 					return null
 				}
-				//console.log("error")
 				const user = await res.json()
-				//console.log(user)
 				const { id, email, role, dni, firstName, lastName, birthDate, phone, address, photo } = user
 				if (res.ok && user) {
 					return {
@@ -71,15 +68,15 @@ const handler = NextAuth({
 						phone,
 						address,
 						photo,
-					} as User
+					}
 				}
+				return null
 			},
 		}),
 	],
 
 	callbacks: {
 		jwt: async ({ token, user }: any) => {
-			//console.log(user)
 			if (user) {
 				return {
 					...token,
@@ -90,7 +87,6 @@ const handler = NextAuth({
 		},
 		session: ({ session, token }: any) => {
 			session.user = token as any
-			//console.log(session)
 			return session
 		},
 	},

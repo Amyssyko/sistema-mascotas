@@ -83,7 +83,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
 		return NextResponse.json(user, { status: 200 })
 	} catch (error: any) {
-		console.log(error)
 		//!id No existe en el registro actual
 		if (error.code === "P2025") {
 			return new NextResponse(`No existe ID del Usuario`, { status: 404 })

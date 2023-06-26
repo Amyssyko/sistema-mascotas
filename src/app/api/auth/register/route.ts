@@ -37,7 +37,6 @@ export async function POST(request: Request) {
 
 		const { error } = schema.validate(json)
 		if (error) {
-			console.log(error)
 			return new NextResponse(error.message, { status: 400 })
 		}
 

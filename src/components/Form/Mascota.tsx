@@ -39,7 +39,6 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 					setBreed(breed)
 					setDescription(description)
 				} catch (error: Error | AxiosError | any) {
-					console.log(error)
 					console.error(`${error.response.data} (${error.response.status})`)
 					if (error.response && error.response.status) {
 						toast.error(error.response.data, {
@@ -157,7 +156,6 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 				router.replace("/dashboard/lista-mascotas")
 			}
 		} catch (error: Error | AxiosError | any) {
-			console.log(error)
 			console.error(`${error.response.data} (${error.response.status})`)
 			if (error.response && error.response.status) {
 				toast.error(error.response.data, {

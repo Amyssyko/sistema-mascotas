@@ -23,7 +23,6 @@ export const Perdido: React.FC<ID> = ({ id }) => {
 
 	const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
 		setPetId(event.target.value)
-		console.log(petId)
 	}
 
 	const handleSelectStatus = (event: any) => {
@@ -157,7 +156,6 @@ export const Perdido: React.FC<ID> = ({ id }) => {
 				router.replace("/dashboard/mascotas-perdidas")
 			}
 		} catch (error: Error | AxiosError | any) {
-			console.log(error)
 			console.error(`${error.response.data} (${error.response.status})`)
 			if (error.response && error.response.status) {
 				toast.error(error.response.data, {

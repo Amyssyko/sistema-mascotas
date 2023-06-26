@@ -59,7 +59,6 @@ export default function Login() {
 			redirect: false,
 			callbackUrl: "/",
 		})
-		console.log(result)
 		if (result?.error === "CredentialsSignin") {
 			setFormValues({
 				email: "",

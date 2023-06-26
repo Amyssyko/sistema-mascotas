@@ -20,7 +20,7 @@ export async function PATCH(request: Request) {
 	const json = await request.json()
 	const { email, role } = json
 	const id = Number(json.id)
-	console.log(json)
+
 	try {
 		const schema = Joi.object({
 			id: Joi.number().required().messages({
@@ -57,8 +57,6 @@ export async function PATCH(request: Request) {
 
 		return NextResponse.json(user, { status: 200 })
 	} catch (error: any) {
-		console.log(error)
-
 		if (error.code === "P2002") {
 			return new NextResponse(`Ya existe Usuario "${json.dni}"`, {
 				status: 409,

@@ -40,7 +40,6 @@ const Rol: React.FC<ID> = ({ ID }) => {
 
 	const [email, setEmail] = React.useState("")
 	const [role, setRole] = React.useState("")
-	console.log(ID)
 	React.useEffect(() => {
 		const fetchData = async () => {
 			if (ID) {
@@ -78,7 +77,6 @@ const Rol: React.FC<ID> = ({ ID }) => {
 				role,
 			})
 
-			console.log(response)
 			if (response.status === 200) {
 				toast.success("Datos actualizados éxito", {
 					duration: 3000,
@@ -96,7 +94,6 @@ const Rol: React.FC<ID> = ({ ID }) => {
 			}
 			router.replace("/dashboard/lista-roles")
 		} catch (error: any) {
-			console.log(error)
 			handleError(error.response.data)
 			console.error(`${error.response.data} (${error.response.status})`)
 			if (error.response && error.response.status) {

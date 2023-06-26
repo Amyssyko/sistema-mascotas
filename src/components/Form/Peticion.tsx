@@ -200,7 +200,6 @@ export const Peticion: React.FC<ID> = ({ id }) => {
 				router.replace("/dashboard/lista-peticiones")
 			}
 		} catch (error: Error | AxiosError | any) {
-			console.log(error)
 			console.error(`${error.response.data} (${error.response.status})`)
 			if (error.response && error.response.status) {
 				toast.error(error.response.data, {

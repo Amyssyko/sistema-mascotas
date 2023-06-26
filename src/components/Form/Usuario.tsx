@@ -67,7 +67,6 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 
 		try {
 			if (cedula !== undefined || cedula) {
-				console.log("update")
 				const response = await axios.patch("/api/v2/persons", {
 					dni,
 					firstName,
@@ -79,7 +78,6 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 					userId,
 				})
 
-				console.log(response)
 				if (response.status === 200) {
 					toast.success("Datos actualizados éxito", {
 						duration: 3000,
@@ -109,7 +107,6 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 					userId,
 				})
 
-				console.log(response)
 				if (response.status === 201) {
 					toast.success("Datos actualizados éxito", {
 						duration: 3000,
