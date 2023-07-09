@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="es">
 			<body className={montserrat.className}>
 				<Providers>
-					<div className=" bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-rose-100 to-teal-100 dark:bg-deep-orange-100">
+					<div className=" bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-rose-50 to-teal-100 dark:bg-white">
 						{children}
 					</div>
 				</Providers>

@@ -21,8 +21,8 @@ model User {
   email     String   @unique
   password  String
   role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
   person    Person?
   blog      Post[]
 }
@@ -35,8 +35,8 @@ model Post {
   userId      Int?
   Pet         Pet?      @relation(fields: [petId], references: [id])
   petId       Int?      @unique
-  postDate    DateTime? @default(now())
-  postUpdate  DateTime? @updatedAt
+  postDate    DateTime? @default(now()) @db.Timestamptz(3)
+  postUpdate  DateTime? @updatedAt @db.Timestamptz(3)
 }
 
 model Person {
@@ -50,8 +50,8 @@ model Person {
   userId    Int?       @unique
   user      User?      @relation(fields: [userId], references: [id])
   adoption  Adoption[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime   @updatedAt @db.Timestamptz(3)
 }
 
 model Pet {
@@ -66,8 +66,8 @@ model Pet {
   adoption    Adoption[]
   lostpet     LostPet[]
   post        Post[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime   @updatedAt @db.Timestamptz(3)
 }
 
 enum StatusAdoption {
@@ -87,8 +87,8 @@ model Adoption {
   status      StatusAdoption @default(Tramitando)
   person      Person?        @relation(fields: [personDni], references: [dni])
   personDni   String?        @db.VarChar(10)
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  createdAt   DateTime       @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime       @updatedAt @db.Timestamptz(3)
 }
 
 enum PetStatus {
@@ -103,6 +103,6 @@ model LostPet {
   lostLocation String?
   description  String?
   status       PetStatus @default(Perdido)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime  @updatedAt @db.Timestamptz(3)
 }

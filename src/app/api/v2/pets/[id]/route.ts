@@ -33,7 +33,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
 	const id = Number(params.id)
 	const json = await request.json()
-	const { name, typePet, breed, description } = json
+	const { name, typePet, breed, photo, description } = json
 	const age = Number(json.age)
 	const month = Number(json.month)
 	try {
@@ -72,24 +72,24 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 				"string.base": "Raza de mascota tiene que contener solo letras",
 				"string.empty": "Raza de mascota está vacio",
 			}),
-			/**photo: Joi.string().required().messages({
+			photo: Joi.string().required().messages({
 				"any.required": "Selecione una foto es requerida",
 				"string.base": "La foto debe valido",
 				"string.empty": "Selecione una foto",
-			}), */
+			}),
 			description: Joi.string().required().messages({
 				"any.required": "Descripción es requerido",
 				"string.base": "Descripción es tiene que ser solo letras",
 				"string.empty": "Descripción está vacio",
 			}),
 		})
-		const { error } = schema.validate({ id, name, typePet, age, month, breed, description })
+		const { error } = schema.validate({ id, name, typePet, age, month, breed, photo, description })
 		if (error) {
 			return new NextResponse(error.message, { status: 400 })
 		}
 		const updatedPet = await prisma.pet.update({
 			where: { id },
-			data: { name, typePet, age, month, breed, description },
+			data: { name, typePet, age, month, breed, photo, description },
 		})
 		const { createdAt, updatedAt, ...petWithoutData } = updatedPet
 

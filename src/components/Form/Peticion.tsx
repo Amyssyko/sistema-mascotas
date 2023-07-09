@@ -1,14 +1,12 @@
 "use client"
 
 import { useError } from "@/hooks/useError"
-import { ClassNames } from "@emotion/react"
 import { Card, Input, Button, Typography, Select, Option, Alert, Textarea } from "@material-tailwind/react"
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
 import { toast } from "react-hot-toast"
-import styles from "../../../types"
 type ID = {
 	id?: number | null
 }
@@ -314,6 +312,7 @@ export const Peticion: React.FC<ID> = ({ id }) => {
 						size="lg"
 						min={0}
 						max={30000}
+						step="0.01"
 						label="Ingresos Mensuales"
 						value={income}
 						onChange={(e) => setIncome(e.target.value)}
@@ -343,7 +342,6 @@ export const Peticion: React.FC<ID> = ({ id }) => {
 						value={description}
 						onChange={(e) => setDescription(e.target.value)}
 					/>
-					{/**<Input id="photo" name="photo" type="file" size="lg" label="Foto" onChange={handleFileChange} /> */}
 				</div>
 				<div>
 					{isErrored && (

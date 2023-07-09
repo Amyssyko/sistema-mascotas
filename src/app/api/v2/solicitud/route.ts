@@ -4,16 +4,26 @@ import { NextResponse } from "next/server"
 import Joi from "joi"
 import { verificarCedula } from "udv-ec"
 
+export async function GET(request: Request) {
+	function isEmptyObject(obj: any): boolean {
+		return Object.keys(obj).length === 0
+	}
+	const pets = await prisma.pet.findMany({
+		include: { adoption: { select: { petId: true, personDni: true } } },
+	})
+
+	if (isEmptyObject(pets)) {
+		return new NextResponse("No existen datos de mascotas", { status: 404 })
+	}
+
+	const filteredData = pets.filter((obj) => obj.adoption.length === 0)
+
+	return NextResponse.json(filteredData, { status: 200 })
+}
+
 export async function POST(request: Request) {
-	//?se obtiene los datos del frontend
-
 	const json = await request.json()
-
-	//destructuracion de datos
-
 	const { jobType, income, description, personDni } = json
-	//tipo de datos
-
 	try {
 		const schema = Joi.object({
 			personDni: Joi.string().required().min(10).max(10).messages({

@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react"
 function Footer() {
 	const { data: session } = useSession()
 	return (
-		<footer className="mx-auto my-auto w-full bg-white p-4 border-gray-400 border-t ">
+		<footer className="mx-auto my-auto w-full bg-white  p-4 border-gray-400 border-t">
 			<div className="flex flex-col md:flex-row md:items-center md:justify-between">
 				<svg
 					fill="currentColor"
@@ -54,7 +54,7 @@ function Footer() {
 						<li>
 							<Typography
 								as="a"
-								href="/dashboard"
+								href="/dashboard/lista-adopciones"
 								color="blue-gray"
 								className="font-normal transition-colors hover:text-blue-500 focus:text-blue-500"
 							>

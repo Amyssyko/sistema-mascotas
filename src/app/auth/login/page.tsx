@@ -31,10 +31,6 @@ export default function Login() {
 	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const { email, password } = formValues
-		//resetError()
-		//const formData = new FormData(event.currentTarget)
-		//const email = formData.get("email")
-		//const password = formData.get("password")
 
 		const isEmailEmpty = !email
 		const isPasswordEmpty = !password
@@ -67,11 +63,7 @@ export default function Login() {
 			toast.error("Credenciales Invalidas", {
 				duration: 1000,
 				position: "top-right",
-
-				// Custom Icon
 				icon: "❌",
-
-				// Change colors of success/error/loading icon
 				iconTheme: {
 					primary: "#000",
 					secondary: "#fff",
@@ -137,7 +129,6 @@ export default function Login() {
 									id="email"
 									label="Email"
 									type="text"
-									placeholder="example@example.com"
 									value={formValues.email}
 									onChange={handleInputChange}
 								/>
@@ -146,8 +137,7 @@ export default function Login() {
 									name="password"
 									id="password"
 									size="lg"
-									label="Password"
-									placeholder="********"
+									label="Contraseña"
 									value={formValues.password}
 									onChange={handleInputChange}
 								/>

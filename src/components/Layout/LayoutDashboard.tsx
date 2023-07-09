@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react"
 import Admin from "../Navbar/Admin"
 import SidebarAdmin from "../SidebarAdmin"
 import Footer from "../Footer"
-import { Button } from "@material-tailwind/react"
 
 function LayoutDashboard({ children }: { children: React.ReactNode }) {
 	const [availableHeight, setAvailableHeight] = useState(0)
@@ -40,7 +39,7 @@ function LayoutDashboard({ children }: { children: React.ReactNode }) {
 	}
 
 	return (
-		<div className="w-full h-screen bg-white flex flex-col">
+		<div className="w-full  bg-white flex flex-col">
 			{!isMobile && <SidebarAdmin />}
 			<Admin />
 
@@ -48,7 +47,7 @@ function LayoutDashboard({ children }: { children: React.ReactNode }) {
 			<div
 				className={`ml-${
 					isMobile ? "0" : "64"
-				}  border-transparent  sm:ml-0 md:ml-0 lg:ml-64 xl:64 border  flex-1 overflow-hidden`}
+				}  border-transparent  sm:ml-0 md:ml-0 lg:ml-64 xl:64 max-h-full min-h-screen border  flex-1 overflow-hidden`}
 				style={{ height: `${availableHeight}px` }}
 			>
 				{children}

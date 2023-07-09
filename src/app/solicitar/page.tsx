@@ -1,4 +1,4 @@
-import CustomNavbar from "@/components/CustomNavbar"
+import CustomNavbar from "@/components/Navbar/Client"
 import Footer from "@/components/Footer"
 import { Solicitud } from "@/components/Form/Solicitud"
 import React from "react"

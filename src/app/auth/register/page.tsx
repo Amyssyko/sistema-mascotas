@@ -7,7 +7,6 @@ import { useError } from "@hooks/useError"
 import axios, { AxiosResponse, AxiosError } from "axios"
 import { toast } from "react-hot-toast"
 import { useRouter } from "next/navigation"
-import { doesNotMatch } from "assert"
 
 export default function SignUp() {
 	const router = useRouter()

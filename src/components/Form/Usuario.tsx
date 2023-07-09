@@ -1,5 +1,5 @@
 "use client"
-import React from "react"
+import React, { useEffect } from "react"
 import {
 	Card,
 	CardHeader,
@@ -8,27 +8,24 @@ import {
 	Button,
 	Typography,
 	Tabs,
-	TabsHeader,
 	TabsBody,
-	Tab,
-	TabPanel,
-	Select,
-	Option,
 	Alert,
 } from "@material-tailwind/react"
 import {
 	EnvelopeIcon,
 	ExclamationCircleIcon,
 	IdentificationIcon,
-	LockClosedIcon,
 	PhoneIcon,
 	UserCircleIcon,
+	PhotoIcon,
 } from "@heroicons/react/24/solid"
 import axios from "axios"
 import { useError } from "@/hooks/useError"
 import { toast } from "react-hot-toast"
 import { useRouter } from "next/navigation"
 import { signOut } from "next-auth/react"
+import { data } from "autoprefixer"
+import Image from "next/image"
 
 interface UsuarioProps {
 	id: string | number | undefined
@@ -41,7 +38,7 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 	const { myError, isErrored, handleError, resetError } = useError()
 
 	const [formValues, setFormValues] = React.useState({
-		dni: cedula,
+		dni: "",
 		firstName: "",
 		lastName: "",
 		email: correo,
@@ -59,6 +56,31 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 			[name]: value,
 		}))
 	}
+
+	useEffect(() => {
+		if (cedula) {
+			try {
+				const dataUsuario = async () => {
+					const data = await axios.get(`http://localhost:3000/api/v2/persons/${cedula}`)
+					setFormValues({
+						dni: data.data.dni,
+						firstName: data.data.firstName,
+						lastName: data.data.lastName,
+						email: data.data.email,
+						birthDate: data.data.birthDate.slice(0, 10),
+						phone: data.data.phone,
+						address: data.data.address,
+						photo: data.data.photo,
+						userId: data.data.userId,
+					})
+				}
+				dataUsuario()
+			} catch (error) {
+				console.log(error)
+				console.error(error)
+			}
+		}
+	}, [cedula])
 
 	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -82,11 +104,7 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 					toast.success("Datos actualizados éxito", {
 						duration: 3000,
 						position: "bottom-center",
-
-						// Custom Icon
 						icon: "🐱",
-
-						// Change colors of success/error/loading icon
 						iconTheme: {
 							primary: "#000",
 							secondary: "#fff",
@@ -94,6 +112,7 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 					})
 				}
 				router.refresh()
+				signOut()
 			} else {
 				const response = await axios.post("/api/v2/persons", {
 					dni,
@@ -111,11 +130,7 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 					toast.success("Datos actualizados éxito", {
 						duration: 3000,
 						position: "bottom-center",
-
-						// Custom Icon
 						icon: "🐱",
-
-						// Change colors of success/error/loading icon
 						iconTheme: {
 							primary: "#000",
 							secondary: "#fff",
@@ -145,77 +160,87 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 	}
 
 	return (
-		<Card className="w-full max-w-[32rem] bg-white mx-auto mt-24">
+		<Card className="w-full max-w-[42rem] bg-white mx-auto my-6">
 			<CardHeader
 				color="blue"
 				floated={false}
 				shadow={false}
-				className="m-0 grid place-items-center rounded-b-none py-6 px-4 text-center"
+				className="m-0 grid place-items-center rounded-b-none py-2 px-4 text-center"
 			>
-				<div className="mb-2 rounded-full border border-white/10 bg-white/10 p-6 text-white">
+				{formValues.photo.length !== 0 ? (
+					<Card className="my-2 overflow-hidden w-24 mx-auto border rounded">
+						<Image
+							alt={formValues.firstName}
+							className="h-[auto] w-full object-cover object-center"
+							src={formValues.photo}
+							height={0}
+							width={0}
+							sizes="100vw"
+						/>
+					</Card>
+				) : (
 					<UserCircleIcon className="h-10 w-10" />
-				</div>
+				)}
 				<Typography variant="h4" color="white">
-					Datos de Perfil de Usuario
+					{formValues?.firstName
+						? `Datos de Perfil de ${formValues.firstName} ${formValues.lastName}`
+						: `Datos de Perfil de Usuario `}
 				</Typography>
 			</CardHeader>
 			<CardBody>
 				<Tabs className="overflow-visible">
 					<TabsBody>
 						<form onSubmit={onSubmit} className="mt-4 flex flex-col gap-5 text-red-500">
-							<div className="my-1">
-								<Typography variant="small" color="blue-gray" className="mb-4 font-medium">
-									Card Details
+							<div className="my-2">
+								<Typography
+									variant="small"
+									color="blue-gray"
+									className="mb-6 font-semibold text-xl text-center "
+								>
+									Detalles Usuario
 								</Typography>
-								<div className="my-4 flex items-center gap-4">
-									{cedula ? (
-										<Input
-											type="number"
-											inputMode="numeric"
-											//required
-											id="dni"
-											disabled
-											label="Cedula"
-											//placeholder="1600821401"
-											name="dni"
-											autoComplete="dni"
-											min="0"
-											value={formValues.dni}
-											onChange={handleInputChange}
-											icon={<IdentificationIcon className="h-5 w-5 text-blue-gray-300" />}
-										/>
-									) : (
-										<Input
-											type="number"
-											inputMode="numeric"
-											//required
-											id="dni"
-											label="Cedula"
-											//placeholder="1600821401"
-											name="dni"
-											autoComplete="dni"
-											min="0"
-											value={formValues.dni}
-											onChange={handleInputChange}
-											icon={<IdentificationIcon className="h-5 w-5 text-blue-gray-300" />}
-										/>
-									)}
+								<div className="my-2">
+									<div className="my-4 flex items-center gap-4">
+										{cedula ? (
+											<Input
+												type="number"
+												inputMode="numeric"
+												id="dni"
+												disabled
+												label="Cedula"
+												name="dni"
+												autoComplete="dni"
+												min="0"
+												value={formValues.dni}
+												onChange={handleInputChange}
+												icon={<IdentificationIcon className="h-5 w-5 text-blue-gray-300" />}
+											/>
+										) : (
+											<Input
+												type="number"
+												inputMode="numeric"
+												id="dni"
+												label="Cedula"
+												name="dni"
+												autoComplete="dni"
+												min="0"
+												value={formValues.dni}
+												onChange={handleInputChange}
+												icon={<IdentificationIcon className="h-5 w-5 text-blue-gray-300" />}
+											/>
+										)}
 
-									<Input
-										type="text"
-										label="Nombre"
-										//required
-										id="firstName"
-										//placeholder="Lorena"
-										name="firstName"
-										autoComplete="firstName"
-										icon={<ExclamationCircleIcon className="h-5 w-5 text-blue-gray-300" />}
-										value={formValues.firstName}
-										onChange={handleInputChange}
-										//value={formatCardNumber(cardNumber)}
-										//onChange={(event) => setCardNumber(event.target.value)}
-										//icon={<IdentificationIcon className="h-5 w-5 text-blue-gray-300" />}
-									/>
+										<Input
+											type="text"
+											label="Nombre"
+											id="firstName"
+											name="firstName"
+											autoComplete="firstName"
+											icon={<ExclamationCircleIcon className="h-5 w-5 text-blue-gray-300" />}
+											value={formValues.firstName}
+											onChange={handleInputChange}
+										/>
+									</div>
 								</div>
 
 								<div className="my-2">
@@ -224,7 +249,6 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 											disabled
 											name="email"
 											label="Email"
-											//placeholder="example@email.com"
 											type="text"
 											id="email"
 											autoComplete="email"
@@ -237,7 +261,6 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 										<Input
 											name="lastName"
 											label="Apellido"
-											//placeholder="Rodriguez"
 											type="text"
 											id="lastName"
 											autoComplete="lastName"
@@ -264,7 +287,6 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 
 										<Input
 											name="phone"
-											//placeholder="0983374216"
 											label="Telefono"
 											type="tel"
 											id="phone"
@@ -281,14 +303,14 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 										<Input
 											name="photo"
 											label="Subir foto"
-											type="file"
+											type="text"
 											id="photo"
 											value={formValues.photo}
+											icon={<PhotoIcon className="h-5 w-5 text-blue-gray-300" />}
 											onChange={handleInputChange}
 										/>
 										<Input
 											name="address"
-											//placeholder="Av. Los Recuerdos"
 											label="Dirreción"
 											type="text"
 											id="address"
@@ -307,7 +329,6 @@ export default function Usuario({ id, correo, cedula }: UsuarioProps) {
 									</Alert>
 								)}
 							</div>
-
 							<Button type="submit" size="lg" className=" mx-auto">
 								Actualizar
 							</Button>

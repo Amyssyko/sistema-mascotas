@@ -1,10 +1,10 @@
 "use client"
 import React from "react"
 import { Navbar, Typography, Button, IconButton, Card, Collapse, Avatar } from "@material-tailwind/react"
-import { SignIn } from "./Bottom/SignIn"
+import { SignIn } from "../Bottom/SignIn"
 import Link from "next/link"
 
-export default function CustomNavbar() {
+export default function Client() {
 	const [openNav, setOpenNav] = React.useState(false)
 
 	React.useEffect(() => {
@@ -28,9 +28,14 @@ export default function CustomNavbar() {
 					Información
 				</Link>
 			</Typography>
-			<Typography as="li" variant="small" color="blue-gray" className="p-1 font-normal">
+			{/**<Typography as="li" variant="small" color="blue-gray" className="p-1 font-normal">
 				<Link href="/solicitar" className="flex items-center">
 					Solicitar Adopción
+				</Link>
+			</Typography> */}
+			<Typography as="li" variant="small" color="blue-gray" className="p-1 font-normal">
+				<Link href="/dashboard/lista-adopciones" className="flex items-center">
+					Dashboard
 				</Link>
 			</Typography>
 			<Typography as="li" variant="small" color="blue-gray" className="p-1 font-normal">
@@ -40,7 +45,7 @@ export default function CustomNavbar() {
 	)
 
 	return (
-		<Navbar className="sticky inset-0 z-10 h-max max-w-full rounded-none py-2 px-4 lg:px-8 lg:py-4 bg-gradient-to-bl from-rose-100 to-teal-100">
+		<Navbar className="sticky inset-0 z-10 h-max max-w-full rounded-none py-0 px-4 lg:px-8 shadow-2xl  bg-pink-50">
 			<div className="flex items-center justify-between text-blue-gray-900">
 				<div className="flex items-center justify-center flex-col ">
 					{/**<Avatar src="https://source.unsplash.com/random?wallpapers" alt="avatar" variant="circular" /> */}

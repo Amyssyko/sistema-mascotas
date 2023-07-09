@@ -8,7 +8,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
 	return (
 		<LayoutDashboard>
-			<h1>{id}</h1>
 			<Mascota id={id} />
 		</LayoutDashboard>
 	)

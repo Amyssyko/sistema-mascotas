@@ -1,18 +1,13 @@
 "use client"
-import CustomNavbar from "@/components/CustomNavbar"
 import React from "react"
-import Footer from "@/components/Footer"
-import PhotoPets from "../../components/PhotoPets"
+import { PetsCard } from "@/components/Cards/PetsCard"
+import LayoutHome from "@/components/Layout/LayoutHome"
 
 function Page() {
 	return (
-		<div className="flex flex-col min-h-screen w-full">
-			<CustomNavbar />
-			<div className="flex-grow">
-				<PhotoPets />
-			</div>
-			<Footer />
-		</div>
+		<LayoutHome>
+			<PetsCard />
+		</LayoutHome>
 	)
 }
 

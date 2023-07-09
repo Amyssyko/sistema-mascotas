@@ -44,8 +44,12 @@ export default function SidebarAdmin() {
 	return (
 		<Card className="fixed top-14 left-2 h-[calc(100vh-11rem)] w-60 sm:w-60 md:w-60 lg:w-60 xl:w-60 2xl:w-60 p-2 shadow-xl shadow-blue-gray-900/5">
 			<div className="mb-2 flex items-center gap-4 p-4">
-				<Avatar src="https://source.unsplash.com/random?wallpapers" alt="brand" className="h-8 w-8" />
-				<Typography variant="h5" color="gray">
+				{data?.user?.photo ? (
+					<Avatar src={data?.user.photo} alt="brand" className="h-8 w-8" />
+				) : (
+					<Avatar src="https://source.unsplash.com/random?wallpapers" alt="brand" className="h-8 w-8" />
+				)}
+				<Typography className="text-black/70 hover:text-blue-gray-900 " variant="h5" color="gray">
 					{data?.user.firstName && data?.user.lastName
 						? `${data?.user.firstName} ${data?.user.lastName}`
 						: "Bienvenido"}
@@ -61,8 +65,8 @@ export default function SidebarAdmin() {
 						/>
 					}
 				>
-					<ListItem className="p-0 " selected={open === 1}>
-						<AccordionHeader onClick={() => handleOpen(1)} className="border-b-0 p-3">
+					<ListItem className="p-0 hover:bg-blue-gray-100" selected={open === 1}>
+						<AccordionHeader onClick={() => handleOpen(1)} className="border-b-0 p-3 hover:text-blue-800">
 							<ListItemPrefix>
 								<svg
 									fill="currentColor"
@@ -75,7 +79,7 @@ export default function SidebarAdmin() {
 									<path d="m309.6 158.5 23.1-138.7C334.6 8.4 344.5 0 356.1 0c7.5 0 14.5 3.5 19 9.5L392 32h52.1c12.7 0 24.9 5.1 33.9 14.1L496 64h56c13.3 0 24 10.7 24 24v24c0 44.2-35.8 80-80 80h-69.3l-5.1 30.5-112-64zM416 256.1V480c0 17.7-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32V364.8c-24 12.3-51.2 19.2-80 19.2s-56-6.9-80-19.2V480c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V249.8c-28.8-10.9-51.4-35.3-59.2-66.5L1 167.8c-4.3-17.1 6.1-34.5 23.3-38.8s34.5 6.1 38.8 23.3l3.9 15.5C70.5 182 83.3 192 98 192h205.8L416 256.1zM464 80a16 16 0 1 0-32 0 16 16 0 1 0 32 0z"></path>
 								</svg>
 							</ListItemPrefix>
-							<Typography color="blue-gray" className="mr-auto font-normal">
+							<Typography color="blue-gray" className="mr-auto font-normal hover:text-blue-800 ">
 								Mascotas
 							</Typography>
 						</AccordionHeader>
@@ -139,8 +143,8 @@ export default function SidebarAdmin() {
 						/>
 					}
 				>
-					<ListItem className="p-0" selected={open === 2}>
-						<AccordionHeader onClick={() => handleOpen(2)} className="border-b-0 p-3">
+					<ListItem className="p-0 hover:bg-blue-gray-100" selected={open === 2}>
+						<AccordionHeader onClick={() => handleOpen(2)} className="border-b-0 p-3 hover:text-blue-800">
 							<ListItemPrefix>
 								<svg
 									fill="currentColor"
@@ -154,7 +158,7 @@ export default function SidebarAdmin() {
 									<path d="M11 22v-5H8v5H5V11.9a3.49 3.49 0 0 1-2.48-1.64A3.59 3.59 0 0 1 2 8.5 3.65 3.65 0 0 1 6 5a1.89 1.89 0 0 0 2-2 1 1 0 0 1 1-1 1 1 0 0 1 1 1 3.89 3.89 0 0 1-4 4C4.19 7 4 8.16 4 8.51S4.18 10 6 10h5.09A6 6 0 0 0 19 14.65V22h-3v-5h-2v5z"></path>
 								</svg>
 							</ListItemPrefix>
-							<Typography color="blue-gray" className="mr-auto font-normal">
+							<Typography color="blue-gray" className="mr-auto font-normal hover:text-blue-800">
 								Adopciones
 							</Typography>
 						</AccordionHeader>
@@ -206,19 +210,19 @@ export default function SidebarAdmin() {
 						/>
 					}
 				>
-					<ListItem className="p-0" selected={open === 3}>
-						<AccordionHeader onClick={() => handleOpen(3)} className="border-b-0 p-3">
+					<ListItem className="p-0 hover:bg-blue-gray-100" selected={open === 3}>
+						<AccordionHeader onClick={() => handleOpen(3)} className="border-b-0 p-3 hover:text-blue-800">
 							<ListItemPrefix>
 								<UserGroupIcon className="h-5 w-5" />
 							</ListItemPrefix>
-							<Typography color="blue-gray" className="mr-auto font-normal">
+							<Typography color="blue-gray" className="mr-auto font-normal hover:text-blue-800">
 								Administrador
 							</Typography>
 						</AccordionHeader>
 					</ListItem>
 					<AccordionBody className="py-1">
 						<List className="p-0">
-							<ListItem
+							{/**<ListItem
 								className="text-xs hover:bg-blue-800 rounded-md shadow-xl bg-blue-300 focus:bg-purple-600"
 								onClick={() => {
 									router.replace("/dashboard/rol")
@@ -228,7 +232,7 @@ export default function SidebarAdmin() {
 									<ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
 								</ListItemPrefix>
 								Roles
-							</ListItem>
+							</ListItem> */}
 							<ListItem
 								className="text-xs hover:bg-blue-800 rounded-md shadow-xl bg-blue-300 focus:bg-purple-600"
 								onClick={() => {
@@ -243,29 +247,16 @@ export default function SidebarAdmin() {
 						</List>
 					</AccordionBody>
 				</Accordion>
-				<hr className="my-2 border-blue-gray-50" />
-				<ListItem>
-					<ListItemPrefix>
-						<InboxIcon className="h-5 w-5" />
-					</ListItemPrefix>
-					Inbox
-					<ListItemSuffix>
-						<Chip value="14" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
-					</ListItemSuffix>
-				</ListItem>
-				<ListItem>
+				<hr className="my-24 border-blue-gray-50" />
+
+				<ListItem className="hover:text-blue-800 hover:bg-blue-gray-100">
 					<ListItemPrefix>
 						<UserCircleIcon className="h-5 w-5" />
 					</ListItemPrefix>
 					Profile
 				</ListItem>
-				<ListItem>
-					<ListItemPrefix>
-						<Cog6ToothIcon className="h-5 w-5" />
-					</ListItemPrefix>
-					Settings
-				</ListItem>
-				<ListItem onClick={() => signOut()}>
+
+				<ListItem onClick={() => signOut()} className="hover:text-red-700 hover:bg-blue-gray-100">
 					<ListItemPrefix>
 						<PowerIcon className="h-5 w-5" />
 					</ListItemPrefix>

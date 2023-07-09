@@ -6,6 +6,7 @@ import axios, { AxiosError, AxiosResponse } from "axios"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
 import { toast } from "react-hot-toast"
+import Image from "next/image"
 type ID = {
 	id?: number | null
 }
@@ -15,6 +16,7 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 	const [age, setAge] = useState("")
 	const [month, setMonth] = useState("")
 	const [breed, setBreed] = useState("")
+	const [photo, setPhoto] = useState("")
 	const [description, setDescription] = useState("")
 
 	const { myError, handleError, isErrored, resetError } = useError()
@@ -38,6 +40,7 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 					setMonth(month)
 					setBreed(breed)
 					setDescription(description)
+					setPhoto(photo)
 				} catch (error: Error | AxiosError | any) {
 					console.error(`${error.response.data} (${error.response.status})`)
 					if (error.response && error.response.status) {
@@ -67,10 +70,12 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 		const isMonth = !month
 		const isBreed = !breed
 		const isDescription = !description
+		const isPhoto = !photo
+
 		//const isPhoto = !photo
 
 		const errorMessage =
-			isName && isTypePet && isAge && isMonth && isMonth && isBreed && isDescription
+			isName && isTypePet && isAge && isMonth && isMonth && isPhoto && isBreed && isDescription
 				? "Verifique que todos los campos sean completados."
 				: ""
 
@@ -80,13 +85,14 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 		}
 
 		try {
-			const response: AxiosResponse = await axios.post(`/api/v2/pets/${id} `, {
+			const response: AxiosResponse = await axios.post(`/api/v2/pets`, {
 				name,
 				typePet,
 				age,
 				month,
 				breed,
 				description,
+				photo,
 			})
 			if (response.status === 201) {
 				toast.success("Mascota registrada con éxito", {
@@ -102,14 +108,10 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 						secondary: "#fff",
 					},
 				})
-				setName("")
-				setAge("")
-				setBreed("")
-				setMonth("")
-				setTypePet("")
-				setDescription("")
+				router.push("/dashboard/lista-mascotas")
 			}
 		} catch (error: Error | AxiosError | any) {
+			console.log(error)
 			handleError(error.response.data)
 			setName("")
 			setAge("")
@@ -117,6 +119,7 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 			setMonth("")
 			setTypePet("")
 			setDescription("")
+			setPhoto("")
 			console.error(`${error.response.data} (${error.response.status})`)
 			if (error.response && error.response.status) {
 				toast.error(error.response.data, {
@@ -142,6 +145,7 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 				month,
 				breed,
 				description,
+				photo,
 			})
 			if (response.status === 200) {
 				toast.success("Registro Actualizado", {
@@ -153,7 +157,7 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 						secondary: "#fff",
 					},
 				})
-				router.replace("/dashboard/lista-mascotas")
+				router.push("/dashboard/lista-mascotas")
 			}
 		} catch (error: Error | AxiosError | any) {
 			console.error(`${error.response.data} (${error.response.status})`)
@@ -168,54 +172,33 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 					},
 				})
 			}
-			router.replace("/dashboard/mascotas")
-		}
-	}
-
-	const handleDelete = async () => {
-		try {
-			const response: AxiosResponse = await axios.post(`/api/v2/pets/${id} `)
-			if (response.status === 204) {
-				toast.success("Registro Eliminado", {
-					duration: 4000,
-					position: "top-right",
-
-					// Custom Icon
-					icon: "✅",
-
-					// Change colors of success/error/loading icon
-					iconTheme: {
-						primary: "#000",
-						secondary: "#fff",
-					},
-				})
-				router.replace("/dashboard/mascotas")
-			}
-		} catch (error: Error | AxiosError | any) {
-			console.error(`${error.response.data} (${error.response.status})`)
-			if (error.response && error.response.status) {
-				toast.error(error.response.data, {
-					duration: 3000,
-					position: "top-left",
-					icon: "❌",
-					iconTheme: {
-						primary: "#000",
-						secondary: "#fff",
-					},
-				})
-			}
-			router.replace("/dashboard/mascotas")
+			router.push("/dashboard/mascotas")
 		}
 	}
 
 	return (
-		<Card color="transparent" shadow={false} className="mx-auto my-4">
+		<Card color="transparent" shadow={false} className="mx-auto my-1">
 			<Typography variant="h4" color="blue-gray" className="mx-auto font-normal">
 				Registro de Mascotas
 			</Typography>
 			<Typography color="gray" className="mx-auto font-normal">
 				Ingrese los detalles de la mascota
 			</Typography>
+			{photo.length !== 0 ? (
+				<Card className="my-2 overflow-hidden max-w-xs mx-auto">
+					<Image
+						alt="nature"
+						className="h-[auto] w-full object-cover object-center"
+						src={photo}
+						height={0}
+						width={0}
+						sizes="100vw"
+					/>
+				</Card>
+			) : (
+				""
+			)}
+
 			<form onSubmit={onSubmit} className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96 mx-auto">
 				<div className="mb-4 flex flex-col gap-6">
 					<Input
@@ -273,6 +256,16 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 						value={breed}
 						onChange={(e) => setBreed(e.target.value)}
 					/>
+
+					<Input
+						id="photo"
+						name="photo"
+						type="text"
+						size="lg"
+						label="Url Foto"
+						value={photo}
+						onChange={(e) => setPhoto(e.target.value)}
+					/>
 					<Input
 						id="description"
 						name="description"
@@ -282,7 +275,6 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 						value={description}
 						onChange={(e) => setDescription(e.target.value)}
 					/>
-					{/**<Input id="photo" name="photo" type="file" size="lg" label="Foto" onChange={handleFileChange} /> */}
 				</div>
 				<div>
 					{isErrored && (
@@ -296,9 +288,6 @@ export const Mascota: React.FC<ID> = ({ id }) => {
 						<Button onClick={handleUpdate} className="mr-2" color="green">
 							Actualizar
 						</Button>
-						{/**<Button onClick={handleDelete} className="ml-2" color="red">
-							Eliminar
-						</Button> */}
 					</div>
 				) : (
 					<Button type="submit" className="mt-6 mx-auto flex justify-center">
